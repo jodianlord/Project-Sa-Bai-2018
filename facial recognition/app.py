@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello World!'
+    return 'WHOOAAA!'
 
 @app.route('/checkFaces', methods=['POST'])
 def checkFaces():
