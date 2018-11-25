@@ -57,11 +57,9 @@ $(document).ready(function () {
             console.log(imgFile);
             
             var formData = new FormData();
-            formData.append("image", imgFile);
+            formData.append("image", img1);
             
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "http://localhost:5000/getencoding");
-            console.log(xhr.send(formData));
+            
         }
     })
 });
