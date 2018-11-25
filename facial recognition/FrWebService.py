@@ -2,11 +2,49 @@ import face_recognition
 import base64
 import base64
 import io
+import numpy as np
 from io import BytesIO
 from PIL import Image, ImageDraw
 
 from flask import Flask, jsonify, request, json
 app = Flask(__name__)
+
+@app.route('/getencoding', methods=['POST'])
+def getEncoding():
+    data = request.files['image']
+    camImage = face_recognition.load_image_file(data)
+    camera_image_encoding = face_recognition.face_encodings(camImage)[0]
+
+    jObj = {}
+    jObj['encoding'] = camera_image_encoding.tolist()
+
+    response = app.response_class(
+        response=json.dumps(jObj),
+        status=200,
+        mimetype='application/json'
+    )
+    return response
+    
+@app.route('/compareimages', methods=['POST'])
+def compareimages():
+    data = request.get_json(force=True)
+    first_encoding = np.array(data['first_encoding'])
+    second_encoding = np.array(data['second_encoding'])
+    results = face_recognition.compare_faces([first_encoding], second_encoding, tolerance=0.4)
+    print(results[0])
+
+    rObj = {'match': str(results[0]).lower()}
+    data_json = json.dumps(rObj)
+
+    print(data_json)
+
+    response = app.response_class(
+        response=json.dumps(rObj),
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
 
 @app.route('/facialreg', methods=['POST'])
 def facialreg():
@@ -24,8 +62,8 @@ def facialreg():
     #compare user taken face image to sample image
     #tolerence is how strict
     #lower the stricter
-    #current sweet spot = 0.4
-    results = face_recognition.compare_faces([sample_image_encoding], camera_image_encoding,tolerance=0.4) 
+    #current sweet spot = 0.5, changed from 0.4
+    results = face_recognition.compare_faces([sample_image_encoding], camera_image_encoding,tolerance=0.5) 
 
     #true = match
     #false = not match

@@ -6,7 +6,7 @@ var img1 = "";
 
 $(document).ready(function () {
 //    Identify();
-
+    $("#submitPhotoBtn").hide();
     jQuery.ajax({
         type: "POST",
         url: "ClearFingerprint",
@@ -21,7 +21,9 @@ $(document).ready(function () {
     $("#closeCameraBtn").hide();
     $("#takePhotoBtn").hide();
 
+
     $("#openCameraBtn").click(function () {
+        $("#submitPhotoBtn").hide();
         Webcam.attach('.my_camera');
         $(this).hide();
         $("#closeCameraBtn").show();
@@ -31,6 +33,7 @@ $(document).ready(function () {
 
     $("#takePhotoBtn").click(function () {
         take_snapshot();
+        $("#submitPhotoBtn").show();
     });
 
     $("#closeCameraBtn").click(function () {
@@ -43,7 +46,34 @@ $(document).ready(function () {
             $("#photo_box").removeClass("box-info").addClass("box-success");
         }
     });
+
+    $("#submitPhotoBtn").click(function () {
+        console.log("img " + img1);
+        if (img1.length > 0) {
+            var extension = img1.substring(img1.indexOf('/') + 1, img1.indexOf(';'));
+            //console.log(img1.substring(img1.indexOf('/') + 1, img1.indexOf(';')));
+            
+            var imgFile = dataURLtoFile(img1, "imgFile." + extension);
+            console.log(imgFile);
+            
+            var formData = new FormData();
+            formData.append("image", imgFile);
+            
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "http://localhost:5000/getencoding");
+            console.log(xhr.send(formData));
+        }
+    })
 });
+
+function dataURLtoFile(dataurl, filename) {
+    var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while(n--){
+        u8arr[n] = bstr.charCodeAt(n);
+    }
+    return new File([u8arr], filename, {type:mime});
+}
 
 function take_snapshot() {
     Webcam.snap(function (data_uri) {
@@ -193,7 +223,7 @@ function Identify_1() {
 
     $("#registerBtn").css("display", "none");
     $("#fg1_msg").css("display", "none");
-    
+
     $("#fg1_tab").removeClass("bg-green").removeClass("bg-red");
     console.log("identify 1");
 
@@ -213,8 +243,7 @@ function Identify_1() {
 //                console.log(pInfo.village);
 
                 window.location.href = "SearchPatientServlet?patientID=" + pInfo.village + pInfo.patientId;
-            }
-            else{
+            } else {
                 $("#Bt_Identify_1").prop("disabled", false);
                 $("#fg1_msg").css("display", "initial");
                 $("#fg1_msg").css("color", "red");

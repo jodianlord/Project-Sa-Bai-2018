@@ -150,6 +150,45 @@
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
+                
+                <div id="photo_box" class="box box-info box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Search By Face</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <div id="my_result" class="my_camera" style="width:300px; height:240px;"></div>
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button id="openCameraBtn" type="button" class="btn btn-info cameraPanelBtns">Open Camera</button>
+                                <button id="takePhotoBtn" type="button" class="btn btn-info cameraPanelBtns">Take Photo</button>                                
+                            </div>
+                            <div class="col-md-6">
+                                <button id="closeCameraBtn" type="button" class="btn btn-warning cameraPanelBtns">Close Camera</button>
+                                <button id="submitPhotoBtn" type="button" class="btn btn-warning cameraPanelBtns">Submit Photo</button>
+                            </div>
+            
+                        </div>
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+
             </div>
 
             <%
