@@ -58,7 +58,7 @@
         <div class="row">
             <div id="alertPanel" class="col-md-12">
                 <div class="callout alert alert-<%=alertBarStatus%> alert-dismissible" style="display:<%=alertBarDisplayState%>">
-                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">ï¿½</button>
                     <h4 style="margin-bottom:0;"><%=alertMsg%> <a href="new_patient.jsp">Register for new Patient</a></h4>
                     <!--Success alert preview. This alert is dismissable.-->
                 </div>
@@ -150,6 +150,49 @@
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
+
+                <div id="fg_box" class="box box-info box-solid">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Search By Face</h3>
+
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <!-- /.box-tools -->
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <!--<img id="fg1Image" class="img-responsive" src="dist/img/fingerprint.png" alt="Photo">-->
+                            </div>
+                        </div>
+
+                        <br/>
+
+                        <div id="media">
+                            
+                        </div>
+                        <div class="row text-center">
+                            <div class="col-sm-12">
+                                <div style="position:relative;float:left;clear:left;margin-top: 50px">
+                                    <button style="float:left;clear:left;margin-left: 0px" id="startstream" type="button" class="btn btn-primary">Start Camera</button>
+                                    <button style="float:left;clear:left;margin-left: 15px" id="capture" type="button" class="btn btn-theme04">Take Photo</button>
+                                    <button style="float:left;clear:left;margin-left: 15px" id="captureagain" type="button" class="btn btn-primary">Retake Photo</button>
+                                    <button style="float:left;clear:left;margin-left: 15px;visibility:hidden" id="submitpic" type="button" class="btn btn-primary">Submit Picture</button>
+                                </div>
+                                <p id="fg1_msg" style="display:none"></p>
+                                <button class="btn btn-warning" id="registerBtn" onclick="window.location.href = 'new_patient.jsp'" style="width:100%; display:none;">Register</button>
+                            </div>
+                        </div>
+
+
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
             </div>
 
             <%
@@ -196,7 +239,7 @@
                         <%
                             //write image
                             String imgName = "";
-                            
+
                             try {
                                 imgName = "\\\\JM-ASUS-LAPTOP\\patient-images\\" + patientRecord.getPhotoImage();
                                 BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
@@ -250,7 +293,7 @@
                                         Collections.sort(visitsAL, new Comparator<Visit>() {
                                             @Override
                                             public int compare(Visit o1, Visit o2) {
-                                                return o2.getId()-o1.getId();
+                                                return o2.getId() - o1.getId();
                                             }
                                         });
 
@@ -446,10 +489,22 @@
         margin-bottom: 0;
     }
 </style>
-
+<script>
+    document.getElementById("captureagain").style.visibility = "hidden";
+    var startstream = document.getElementById("startstream").style.visibility;
+    var capture = document.getElementById("capture").style.visibility;
+    if (startstream === "hidden") {
+        document.getElementById("captureagain").style.visibility = "visible";
+    } else if (capture === "hidden") {
+        document.getElementById("captureagain").style.visibility = "visible";
+    } else {
+        document.getElementById("capture").style.visibility = "hidden"
+    }
+</script>
 <script src='js/array.generics.min.js'></script>
 <script src='js/jquery.min.js'></script>
 <script src="js/webcam.js"></script>
 <script src='js/existing_patient.js'></script>
+<script src='js/takePhoto.js'></script>
 
 <%@include file="footer.jsp" %>
