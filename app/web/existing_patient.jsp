@@ -238,7 +238,7 @@
                             String imgName = "";
                             
                             try {
-                                imgName = "/home/sabai/" + patientRecord.getPhotoImage();
+                                imgName = "C:\\sabai\\" + patientRecord.getPhotoImage();
                                 BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 ImageIO.write(bImage, "jpg", baos);
@@ -508,7 +508,7 @@
                 success: function(resp){
                     console.log("face looking");
                     console.log(resp);
-                    alert("Your name is " + resp.name + "and your id is" + resp.id);
+                    alert("Your name is " + resp.name + " and your id is " + resp.village + resp.id);
                 }, error: function(xhr){
 
                 }

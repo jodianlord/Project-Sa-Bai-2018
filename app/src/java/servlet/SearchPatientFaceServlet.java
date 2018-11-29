@@ -65,7 +65,7 @@ public class SearchPatientFaceServlet extends HttpServlet {
         //get facial encodings
         //ServletContext servletContext = this.getServletConfig().getServletContext();
         BufferedImage toEncode = decodeToImage(photoImage.substring(photoImage.indexOf(',') + 1, photoImage.length()));
-        File toEncodeFile = new File("/home/sabai/image.jpeg");
+        File toEncodeFile = new File("C:\\sabai\\image.jpeg");
         ImageIO.write(toEncode, "jpeg", toEncodeFile);
         Map<String, File> dataMap = new HashMap<String, File>();
         dataMap.put("image", toEncodeFile);
@@ -112,6 +112,7 @@ public class SearchPatientFaceServlet extends HttpServlet {
         JSONObject toPrint = new JSONObject();
         toPrint.put("name", p.getName());
         toPrint.put("id", p.getPatientId());
+        toPrint.put("village", p.getVillage());
         response.setStatus(HttpServletResponse.SC_OK);
         try(PrintWriter out = response.getWriter()){
             out.println(toPrint.toString());
