@@ -4,6 +4,7 @@
     Author     : JunMing
 --%>
 
+<%@page import="java.nio.file.Files"%>
 <%@page import="java.io.IOException"%>
 <%@page import="javax.xml.bind.DatatypeConverter"%>
 <%@page import="java.io.ByteArrayOutputStream"%>
@@ -175,20 +176,17 @@
                                 %>
                                 <div class="widget-user-header bg-aqua">
                                     <div class="widget-user-image">
-                                        
+
                                         <%
                                             //write image
                                             String imgName = "";
-
+                                            String b64 = "";
                                             try {
-                                                imgName = "\\\\JM-ASUS-LAPTOP\\patient-images\\" + patientRecord.getPhotoImage();
-                                                BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
-                                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                                ImageIO.write(bImage, "jpg", baos);
-                                                baos.flush();
-                                                byte[] imageInByteArray = baos.toByteArray();
-                                                baos.close();
-                                                String b64 = DatatypeConverter.printBase64Binary(imageInByteArray);
+                                                File imgFile = patientRecord.getImageFile();
+                                                if (imgFile != null) {
+                                                    byte[] imgBytes = Files.readAllBytes(imgFile.toPath());
+                                                    b64 = DatatypeConverter.printBase64Binary(imgBytes);
+                                                }
                                         %>
                                         <img class="img-responsive" src="data:image/png;base64, <%=b64%>" alt="User Avatar" style="width:100px"/>           
                                         <%
@@ -196,8 +194,8 @@
                                                 System.out.println("Error: " + e);
                                             }
                                         %>
-                                        
-                                        <!--<img class="img" src="patient-images/<%=patientRecord.getPhotoImage()%>" alt="User Avatar" style="width:100px; margin-right:10px;">-->
+
+<!--<img class="img" src="patient-images/<%=patientRecord.getPhotoImage()%>" alt="User Avatar" style="width:100px; margin-right:10px;">-->
                                     </div>
                                     <!-- /.widget-user-image -->
                                     <h3 class="widget-user-username">Name: <%=patientRecord.getName()%></h3>
@@ -232,7 +230,7 @@
                                         <div class="col-md-9">
                                             <%
                                                 String dateOfBirth = patientRecord.getDateOfBirth();
-                                                int yearOfBirth = Integer.parseInt(dateOfBirth.substring(0,4));
+                                                int yearOfBirth = Integer.parseInt(dateOfBirth.substring(0, 4));
                                                 int age = 2017 - yearOfBirth;
                                                 out.println(age);
                                             %>
@@ -382,14 +380,14 @@
                                         try {
                                             Consult pastConsult = ConsultDAO.getConsultByVisitID(v.getId());
                                             consultDate = pastConsult.getConsultDate();
-                                            
+
                                             Date d = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(consultDate);
                                             date = new SimpleDateFormat("dd/MM/yyyy  HH:mm").format(d);
                                         } catch (Exception e) {
                                             Date d = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(v.getDate());
                                             date = new SimpleDateFormat("dd/MM/yyyy  HH:mm").format(d);
                                         }
-                                        
+
                                         int visitID = v.getId();
                                         ConsultDAO consultDAO = new ConsultDAO();
                                         Consult consult = consultDAO.getConsultByVisitID(visitID);

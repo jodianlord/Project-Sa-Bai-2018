@@ -4,6 +4,7 @@
     Author     : tcw
 --%>
 
+<%@page import="java.nio.file.Files"%>
 <%@page import="java.io.IOException"%>
 <%@page import="javax.xml.bind.DatatypeConverter"%>
 <%@page import="java.io.ByteArrayOutputStream"%>
@@ -27,9 +28,7 @@
     <!-- Main content -->
     <section class="content" style="padding-top:0;">
         <!-- Your Page Content Here -->
-        <%
-
-            String msgDisplayState = "none";
+        <%            String msgDisplayState = "none";
             String msgDisplayStatus = "success";
 
             ArrayList<String> errorList = new ArrayList<>();
@@ -64,15 +63,15 @@
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     <h4 style="margin-bottom:0;">
                         <%
-                        if (errorList != null && msgDisplay.equals("")) {
-                            for (String s : errorList) {
-                                out.println(s + "<br/>");
+                            if (errorList != null && msgDisplay.equals("")) {
+                                for (String s : errorList) {
+                                    out.println(s + "<br/>");
 
-                                session.removeAttribute("errorMsg");
+                                    session.removeAttribute("errorMsg");
+                                }
+                            } else {
+                                out.print(msgDisplay);
                             }
-                        } else {
-                            out.print(msgDisplay);
-                        }
                         %>
                     </h4>
                     <!--Success alert preview. This alert is dismissable.-->
@@ -100,13 +99,13 @@
 
             Object visitObject = session.getAttribute("visitRecord");
             Object patientObject = session.getAttribute("patientRecord");
-            
+
             Visit visitRecord = visitObject == null ? null : (Visit) visitObject;
-            
-            if (visitRecord != null){
+
+            if (visitRecord != null) {
                 visitRecord = VisitDAO.getPatientLatestVisit(visitRecord.getPatientId());
             }
-            
+
             Patient patientRecord = patientObject == null ? null : (Patient) patientObject;
 
             displayState = visitRecord != null && patientRecord != null ? "block" : "none";
@@ -155,20 +154,17 @@
                                 %>
                                 <div class="widget-user-header bg-aqua">
                                     <div class="widget-user-image">
-                                        
+
                                         <%
                                             //write image
                                             String imgName = "";
-
+                                            String b64 = "";
                                             try {
-                                                imgName = "\\\\JM-ASUS-LAPTOP\\patient-images\\" + patientRecord.getPhotoImage();
-                                                BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
-                                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                                ImageIO.write(bImage, "png", baos);
-                                                baos.flush();
-                                                byte[] imageInByteArray = baos.toByteArray();
-                                                baos.close();
-                                                String b64 = DatatypeConverter.printBase64Binary(imageInByteArray);
+                                                File imgFile = patientRecord.getImageFile();
+                                                if (imgFile != null) {
+                                                    byte[] imgBytes = Files.readAllBytes(imgFile.toPath());
+                                                    b64 = DatatypeConverter.printBase64Binary(imgBytes);
+                                                }
                                         %>
                                         <img class="img-responsive" src="data:image/png;base64, <%=b64%>" alt="User Avatar" style="width:100px"/>                      
                                         <%
@@ -176,8 +172,8 @@
                                                 System.out.println("Error: " + e);
                                             }
                                         %>
-                                        
-                                        <!--<img class="img" src="patient-images/<%=patientRecord.getPhotoImage()%>" alt="User Avatar" style="width:100px; margin-right:10px;">-->
+
+<!--<img class="img" src="patient-images/<%=patientRecord.getPhotoImage()%>" alt="User Avatar" style="width:100px; margin-right:10px;">-->
                                     </div>
                                     <!-- /.widget-user-image -->
                                     <h3 class="widget-user-username">Name: <%=patientRecord.getName()%></h3>
@@ -211,7 +207,7 @@
                                         <div class="col-md-9">
                                             <%
                                                 String dateOfBirth = patientRecord.getDateOfBirth();
-                                                int yearOfBirth = Integer.parseInt(dateOfBirth.substring(0,4));
+                                                int yearOfBirth = Integer.parseInt(dateOfBirth.substring(0, 4));
                                                 int age = 2017 - yearOfBirth;
                                                 out.println(age);
                                             %>
@@ -264,30 +260,30 @@
                     <div class="box-body">
 
                         <form action="CreateVitalsServlet" method="POST">
-                            
-                            <input type="hidden" name="update" value="<%=visitRecord != null && visitRecord.getVitals() != null ? 1 : 0 %>">
+
+                            <input type="hidden" name="update" value="<%=visitRecord != null && visitRecord.getVitals() != null ? 1 : 0%>">
                             <input type="hidden" name="visitId" value="<%=visitRecord != null ? visitRecord.getId() : ""%>">
 
                             <div class="col-md-10 border-right">
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">Height (cm)</label>
-                                        <input type="number" step=0.1 class="form-control" id="name" name="height" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getHeight(): ""%>">
+                                        <input type="number" step=0.1 class="form-control" id="name" name="height" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getHeight() : ""%>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">Weight (kg)</label>
-                                        <input type="number" step=0.1 class="form-control" id="name" name="weight" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getWeight(): ""%>">
+                                        <input type="number" step=0.1 class="form-control" id="name" name="weight" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getWeight() : ""%>">
                                     </div>
                                 </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="name">Blood Pressure</label><br/>
-                                        <input type="number" class="form-control" id="name" name="systolic" value="<%=visitRecord != null && visitRecord.getVitals() != null ? (int)visitRecord.getVitals().getSystolic() : "0"%>" style="width: 44%; display:inline">&nbsp;/&nbsp;
-                                        <input type="number" class="form-control" id="name" name="diastolic" value="<%=visitRecord != null && visitRecord.getVitals() != null ? (int)visitRecord.getVitals().getDiastolic() : "0"%>" style="width: 44%; display:inline">
+                                        <input type="number" class="form-control" id="name" name="systolic" value="<%=visitRecord != null && visitRecord.getVitals() != null ? (int) visitRecord.getVitals().getSystolic() : "0"%>" style="width: 44%; display:inline">&nbsp;/&nbsp;
+                                        <input type="number" class="form-control" id="name" name="diastolic" value="<%=visitRecord != null && visitRecord.getVitals() != null ? (int) visitRecord.getVitals().getDiastolic() : "0"%>" style="width: 44%; display:inline">
                                     </div>
                                 </div>
 

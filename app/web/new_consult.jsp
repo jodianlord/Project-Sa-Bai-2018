@@ -4,6 +4,7 @@
     Author     : tcw
 --%>
 
+<%@page import="java.nio.file.Files"%>
 <%@page import="java.io.IOException"%>
 <%@page import="javax.xml.bind.DatatypeConverter"%>
 <%@page import="java.io.ByteArrayOutputStream"%>
@@ -196,16 +197,13 @@
                                         <%
                                             //write image
                                             String imgName = "";
-
+                                            String b64 = "";
                                             try {
-                                                imgName = "\\\\JM-ASUS-LAPTOP\\patient-images\\" + patientRecord.getPhotoImage();
-                                                BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
-                                                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                                ImageIO.write(bImage, "jpg", baos);
-                                                baos.flush();
-                                                byte[] imageInByteArray = baos.toByteArray();
-                                                baos.close();
-                                                String b64 = DatatypeConverter.printBase64Binary(imageInByteArray);
+                                                File imgFile = patientRecord.getImageFile();
+                                                if (imgFile != null) {
+                                                    byte[] imgBytes = Files.readAllBytes(imgFile.toPath());
+                                                    b64 = DatatypeConverter.printBase64Binary(imgBytes);
+                                                }
                                         %>
                                         <img class="img-responsive" src="data:image/png;base64, <%=b64%>" alt="User Avatar" style="width:100px"/>              
                                         <%
@@ -398,14 +396,14 @@
                                         try {
                                             Consult pastConsult = ConsultDAO.getConsultByVisitID(v.getId());
                                             consultDate = pastConsult.getConsultDate();
-                                            
+
                                             Date d = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(consultDate);
                                             date = new SimpleDateFormat("dd/MM/yyyy  HH:mm").format(d);
                                         } catch (Exception e) {
                                             Date d = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy").parse(v.getDate());
                                             date = new SimpleDateFormat("dd/MM/yyyy  HH:mm").format(d);
                                         }
-                                        
+
                                         int visitID = v.getId();
 
                                         Consult consult = consultDAO.getConsultByVisitID(visitID);
@@ -440,40 +438,40 @@
                         </table>  
                     </div>
                 </div>
-                            
-<!--        Announcement Box Start-->
-        <div class="col-xs-12 content pull-left"> 
-            <div id="fg_box" class="box box-info box-solid" style="margin-bottom:0px">
-                
-                <div class="box-header with-border">
-                    <h3 class="box-title">Announcement Box</h3>                        
-                    <div class="box-tools pull-left">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                    </div>
-                    <!-- /.box-tools -->
-                </div>                        
-                    
-                <div class="box-body">
-                    <form action="AnnouncementServlet" method="POST" class="row">                            
-                        <div class="col-md-12">
-                                <input type="hidden" name="viewid" value="new_consult.jsp">                           
-                                <div class="form-group">
-                                    <label>Announcement Message :</label>
-                                    <textarea class="form-control" name="msg" rows="2" placeholder="Enter here..." style="height:50px"></textarea>
-                                </div>
+
+                <!--        Announcement Box Start-->
+                <div class="col-xs-12 content pull-left"> 
+                    <div id="fg_box" class="box box-info box-solid" style="margin-bottom:0px">
+
+                        <div class="box-header with-border">
+                            <h3 class="box-title">Announcement Box</h3>                        
+                            <div class="box-tools pull-left">
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                                </button>
+                            </div>
+                            <!-- /.box-tools -->
+                        </div>                        
+
+                        <div class="box-body">
+                            <form action="AnnouncementServlet" method="POST" class="row">                            
                                 <div class="col-md-12">
-                                    <button class="btn btn-primary btn-lg" id="btn-send-announcement" type="submit">Send</button>
-                                    <!--<button class="btn btn-primary btn-lg" name="button_clicked" value="clear" id="btn-clear-announcement" type="submit">Clear</button>-->
-                                </div> 
-                        </div>
-                    </form>
-                </div>                       
+                                    <input type="hidden" name="viewid" value="new_consult.jsp">                           
+                                    <div class="form-group">
+                                        <label>Announcement Message :</label>
+                                        <textarea class="form-control" name="msg" rows="2" placeholder="Enter here..." style="height:50px"></textarea>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <button class="btn btn-primary btn-lg" id="btn-send-announcement" type="submit">Send</button>
+                                        <!--<button class="btn btn-primary btn-lg" name="button_clicked" value="clear" id="btn-clear-announcement" type="submit">Clear</button>-->
+                                    </div> 
+                                </div>
+                            </form>
+                        </div>                       
 
-            </div>
-        </div>
+                    </div>
+                </div>
 
-<!--Announcement Box End-->
+                <!--Announcement Box End-->
 
             </div>
 

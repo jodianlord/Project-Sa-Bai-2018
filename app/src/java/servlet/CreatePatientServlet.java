@@ -57,6 +57,7 @@ public class CreatePatientServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("application/json;charset=UTF-8");
+        ServletContext servletContext = this.getServletConfig().getServletContext();
         try (PrintWriter out = response.getWriter()) {
 
             boolean patientCorrect = false;
@@ -75,11 +76,12 @@ public class CreatePatientServlet extends HttpServlet {
             String photoImage = request.getParameter("photoImage");
 
             System.out.println("photo: " + photoImage);
+            //System.out.println("path: " + request.getRequestURI().substring(request.getContextPath().length()));
 
             //get facial encodings
             //ServletContext servletContext = this.getServletConfig().getServletContext();
             BufferedImage toEncode = decodeToImage(photoImage.substring(photoImage.indexOf(',') + 1, photoImage.length()));
-            File toEncodeFile = new File("C:\\sabai\\image.jpeg");
+            File toEncodeFile = new File("image.jpeg");
             ImageIO.write(toEncode, "jpeg", toEncodeFile);
             Map<String, File> dataMap = new HashMap<String, File>();
             dataMap.put("image", toEncodeFile);
@@ -98,7 +100,6 @@ public class CreatePatientServlet extends HttpServlet {
             } catch (NullPointerException ex) {
                 ex.printStackTrace();
             }
-            toEncodeFile.delete();
 
             Gson gs = new GsonBuilder().setPrettyPrinting().create();
 
@@ -124,7 +125,7 @@ public class CreatePatientServlet extends HttpServlet {
                 return;
             }
 
-            Patient p = new Patient(village, 0, name, contactNo, gender, dateOfBirth, Integer.parseInt(travellingTimeToClinic), 0, null, verificationEncoding);
+            Patient p = new Patient(village, 0, name, contactNo, gender, dateOfBirth, Integer.parseInt(travellingTimeToClinic), 0, null, verificationEncoding, toEncodeFile);
 
             PatientDAO.addPatient(p);
 
@@ -143,8 +144,6 @@ public class CreatePatientServlet extends HttpServlet {
             if (photoImage != null) {
 
                 byte[] photoImageByte = Base64.getDecoder().decode(photoImage.replace("data:image/jpeg;base64,", ""));
-
-                ServletContext servletContext = this.getServletConfig().getServletContext();
                 System.out.println("contextPath = " + servletContext.getContextPath());
                 System.out.println("RealPath = " + servletContext.getRealPath("/"));
                 System.out.println("user.dir = " + System.getProperty("user.dir"));
@@ -152,10 +151,11 @@ public class CreatePatientServlet extends HttpServlet {
 //                try (OutputStream stream = new FileOutputStream(new File(servletContext.getRealPath("/") + "../../web/patient-images/" + p.getVillage() + p.getPatientId() + ".png"))) {
 //                    stream.write(photoImageByte);
 //                }
+/*
                 try (OutputStream stream = new FileOutputStream(new File("C:\\sabai\\" + p.getVillage() + p.getPatientId() + ".png"))) {
                     stream.write(photoImageByte);
                 }
-
+*/
             }
 
             p.setPhotoImage(p.getVillage() + p.getPatientId() + ".png");

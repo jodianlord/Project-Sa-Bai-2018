@@ -1,9 +1,11 @@
 package model;
 
+import java.io.File;
 import java.util.ArrayList;
 import org.json.simple.JSONObject;
 
 public class Patient {
+
     private String village;
     private int patientId;
     private String name;
@@ -15,37 +17,41 @@ public class Patient {
     private String contactNo;
     private int travellingTimeToClinic;
     private JSONObject facialEncoding;
-    
+
     // attribute for image 
     // attribute for fingerprint
     private byte[] fingerprint;
     private int fgSize;
     private byte[] fgImage;
-    
+
+    private File imageFile;
+
     private Fingerprint fingerprintOne;
     private Fingerprint fingerprintTwo;
-    
+
     private ArrayList<Visit> visits;
 
-    public Patient(){}
-    
-    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, ArrayList<Visit> visits, JSONObject encoding) {
-        this(village,patientId,name,gender,dateOfBirth,parentId,allergies,encoding);
+    public Patient() {
+    }
+
+    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, ArrayList<Visit> visits, JSONObject encoding, File image) {
+        this(village, patientId, name, gender, dateOfBirth, parentId, allergies, encoding, image);
         this.visits = visits;
     }
 
-    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, JSONObject encoding) {
+    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, JSONObject encoding, File image) {
         this.village = village;
         this.patientId = patientId;
         this.name = name;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.parentId = parentId;
-        this.allergies = allergies; 
+        this.allergies = allergies;
         this.facialEncoding = encoding;
+        this.imageFile = image;
     }
-    
-    public Patient(String village, int patientId, String name, String contactNo, String gender, String dateOfBirth, int travellingTimeToClinic, int parentId, String allergies, JSONObject encoding) {
+
+    public Patient(String village, int patientId, String name, String contactNo, String gender, String dateOfBirth, int travellingTimeToClinic, int parentId, String allergies, JSONObject encoding, File image) {
         this.village = village;
         this.patientId = patientId;
         this.name = name;
@@ -54,8 +60,13 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
         this.parentId = parentId;
         this.travellingTimeToClinic = travellingTimeToClinic;
-        this.allergies = allergies; 
+        this.allergies = allergies;
         this.facialEncoding = encoding;
+        this.imageFile = image;
+    }
+    
+    public File getImageFile(){
+        return imageFile;
     }
 
     public int getTravellingTimeToClinic() {
@@ -73,7 +84,7 @@ public class Patient {
     public void setContactNo(String contactNo) {
         this.contactNo = contactNo;
     }
-    
+
     public String getAllergies() {
         return allergies;
     }
@@ -81,7 +92,7 @@ public class Patient {
     public void setAllergies(String allergies) {
         this.allergies = allergies;
     }
-    
+
     public String getVillage() {
         return village;
     }
@@ -133,20 +144,20 @@ public class Patient {
     public void setParentId(int parentId) {
         this.parentId = parentId;
     }
-    
+
     public void addVisit(Visit v) {
-        if(visits == null) { 
+        if (visits == null) {
             visits = new ArrayList<Visit>();
         }
-        
+
         visits.add(v);
     }
-    
+
     public byte[] getFingerprint() {
         return fingerprint;
     }
-    
-    public JSONObject getFaceEncoding(){
+
+    public JSONObject getFaceEncoding() {
         return facialEncoding;
     }
 
@@ -193,6 +204,5 @@ public class Patient {
     public void setFingerprintTwo(Fingerprint fingerprintTwo) {
         this.fingerprintTwo = fingerprintTwo;
     }
-    
-    
+
 }

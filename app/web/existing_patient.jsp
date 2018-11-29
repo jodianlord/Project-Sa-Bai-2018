@@ -4,6 +4,7 @@
     Author     : tcw
 --%>
 
+<%@page import="java.nio.file.Files"%>
 <%@page import="java.io.IOException"%>
 <%@page import="javax.xml.bind.DatatypeConverter"%>
 <%@page import="java.io.ByteArrayOutputStream"%>
@@ -236,8 +237,9 @@
                         <%
                             //write image
                             String imgName = "";
-                            
+                            String b64 = "";
                             try {
+                                /*
                                 imgName = "C:\\sabai\\" + patientRecord.getPhotoImage();
                                 BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -245,13 +247,18 @@
                                 baos.flush();
                                 byte[] imageInByteArray = baos.toByteArray();
                                 baos.close();
-                                String b64 = DatatypeConverter.printBase64Binary(imageInByteArray);
+                                */
+                                File imgFile = patientRecord.getImageFile();
+                                if(imgFile != null){
+                                    byte[] imgBytes = Files.readAllBytes(imgFile.toPath());
+                                    b64 = DatatypeConverter.printBase64Binary(imgBytes);
+                                }
                         %>
                         <img  class="img-circle" src="data:image/jpg;base64, <%=b64%>" alt="User Avatar" style="width:50%"/>         
                         <%
                             } catch (IOException e) {
                                 System.out.println("Error: " + e);
-                            }
+                            } 
                         %>
 
                         <!--<img class="img-circle" src="patient-images/<%=patientRecord.getPhotoImage()%>" alt="User Avatar" style="width:100px; margin-right:10px;">-->     

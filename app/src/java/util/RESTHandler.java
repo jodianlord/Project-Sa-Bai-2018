@@ -42,7 +42,7 @@ public class RESTHandler {
     public static void main(String[] args){
         String requestURL = facialURL += "getencoding";
         HashMap<String, File> dataMap = new HashMap<String, File>();
-        dataMap.put("image", new File("C:\\Users\\jodia\\Desktop\\download.jpg"));
+        dataMap.put("image", new File("download.jpg"));
         try {
             sendMultipartPost(requestURL, dataMap);
         } catch (IOException ex) {

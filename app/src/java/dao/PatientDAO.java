@@ -9,9 +9,15 @@ package dao;
  *
  * @author yu.fu.2015
  */
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
+import java.nio.file.Files;
 import model.Patient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -61,7 +67,14 @@ public class PatientDAO {
             }
             try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    p.setPatientId(generatedKeys.getInt(1));
+                    int genKey = generatedKeys.getInt(1);
+                    p.setPatientId(genKey);
+
+                    //insert into images
+                    pstmt = conn.prepareStatement("INSERT INTO patient_pictures (patient_id, picture_blob) VALUES (?, ?)");
+                    pstmt.setInt(1, genKey);
+                    pstmt.setBinaryStream(2, new FileInputStream(p.getImageFile()));
+                    pstmt.executeUpdate();
                     insertSuccess = true;
                 } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
@@ -71,10 +84,13 @@ public class PatientDAO {
             //Catches any possible SQL exception
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }
         System.out.println("user should be in");
+        p.getImageFile().delete();
         return insertSuccess;
     }
 
@@ -193,7 +209,25 @@ public class PatientDAO {
                     String allergy = rs.getString("drug_allergy");
                     String encoding = rs.getString("face_encodings");
                     JSONObject encodedObj = faceJSON;
-                    Patient p = new Patient(village, patientId, name, contactNo, gender, dateOfBirth, travellingTimeToClinic, parentId, allergy, encodedObj);
+
+                    stmt = conn.prepareStatement("select * from patient_pictures where patient_id = ?");
+                    stmt.setInt(1, patientId);
+                    ResultSet rr = stmt.executeQuery();
+
+                    File imgFile = new File("patientImg.jpeg");
+                    FileOutputStream output = new FileOutputStream(imgFile);
+
+                    if (rr.next()) {
+                        InputStream input = rr.getBinaryStream("picture_blob");
+                        byte[] buffer = new byte[1024];
+                        while (input.read(buffer) > 0) {
+                            output.write(buffer);
+                        }
+                    } else {
+                        imgFile = null;
+                    }
+
+                    Patient p = new Patient(village, patientId, name, contactNo, gender, dateOfBirth, travellingTimeToClinic, parentId, allergy, encodedObj, imgFile);
                     p.setPhotoImage(rs.getString("image"));
                     return p;
                 }
@@ -203,6 +237,12 @@ public class PatientDAO {
             e.printStackTrace();
         } catch (ParseException e) {
             e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
         }
         return null;
     }
@@ -238,18 +278,39 @@ public class PatientDAO {
                     encodedObj = getJSONObject(encoding);
                 }
 
+                stmt = conn.prepareStatement("select * from patient_pictures where patient_id = ?");
+                stmt.setInt(1, pNo);
+                ResultSet rr = stmt.executeQuery();
+
+                File imgFile = new File("patientImg.jpeg");
+                FileOutputStream output = new FileOutputStream(imgFile);
+
+                if (rr.next()) {
+                    InputStream input = rr.getBinaryStream("picture_blob");
+                    byte[] buffer = new byte[1024];
+                    while (input.read(buffer) > 0) {
+                        output.write(buffer);
+                    }
+                } else {
+                    imgFile = null;
+                }
+
 //                allergies.add(allergy);
 //                while (rs.next()) {
 //                    allergy = rs.getInt(7);
 //                    allergies.add(allergy);
 //                }
-                Patient p = new Patient(village, patientId, name, contactNo, gender, dateOfBirth, travellingTimeToClinic, parentId, allergy, encodedObj);
+                Patient p = new Patient(village, patientId, name, contactNo, gender, dateOfBirth, travellingTimeToClinic, parentId, allergy, encodedObj, imgFile);
                 p.setPhotoImage(rs.getString("image"));
                 return p;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
@@ -293,13 +354,35 @@ public class PatientDAO {
 //                    allergy = rs.getInt(7);
 //                    allergies.add(allergy);
 //                }
-                Patient p = new Patient(village, patientId, name, gender, dateOfBirth, parentId, allergy, encodedObj);
+
+                stmt = conn.prepareStatement("select * from patient_pictures where patient_id = ?");
+                stmt.setInt(1, patientId);
+                ResultSet rr = stmt.executeQuery();
+
+                File imgFile = new File("patientImg.jpeg");
+                FileOutputStream output = new FileOutputStream(imgFile);
+
+                if (rr.next()) {
+                    InputStream input = rs.getBinaryStream("picture_blob");
+                    byte[] buffer = new byte[1024];
+                    while (input.read(buffer) > 0) {
+                        output.write(buffer);
+                    }
+                } else {
+                    imgFile = null;
+                }
+
+                Patient p = new Patient(village, patientId, name, gender, dateOfBirth, parentId, allergy, encodedObj, imgFile);
                 p.setPhotoImage(rs.getString("image"));
                 return p;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
@@ -339,13 +422,35 @@ public class PatientDAO {
 //                    allergy = rs.getInt(7);
 //                    allergies.add(allergy);
 //                }
-                Patient p = new Patient(village, patientId, name, gender, dateOfBirth, parentId, allergy, encodedObj);
+
+                stmt = conn.prepareStatement("select * from patient_pictures where patient_id = ?");
+                stmt.setInt(1, patientId);
+                ResultSet rr = stmt.executeQuery();
+
+                File imgFile = new File("patientImg.jpeg");
+                FileOutputStream output = new FileOutputStream(imgFile);
+
+                if (rr.next()) {
+                    InputStream input = rs.getBinaryStream("picture_blob");
+                    byte[] buffer = new byte[1024];
+                    while (input.read(buffer) > 0) {
+                        output.write(buffer);
+                    }
+                } else {
+                    imgFile = null;
+                }
+
+                Patient p = new Patient(village, patientId, name, gender, dateOfBirth, parentId, allergy, encodedObj, imgFile);
                 p.setPhotoImage(rs.getString("image"));
                 return p;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
