@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import org.json.simple.JSONObject;
 
 public class Patient {
     private String village;
@@ -13,6 +14,7 @@ public class Patient {
     private String photoImage;
     private String contactNo;
     private int travellingTimeToClinic;
+    private JSONObject facialEncoding;
     
     // attribute for image 
     // attribute for fingerprint
@@ -27,12 +29,12 @@ public class Patient {
 
     public Patient(){}
     
-    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, ArrayList<Visit> visits) {
-        this(village,patientId,name,gender,dateOfBirth,parentId,allergies);
+    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, ArrayList<Visit> visits, JSONObject encoding) {
+        this(village,patientId,name,gender,dateOfBirth,parentId,allergies,encoding);
         this.visits = visits;
     }
 
-    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies) {
+    public Patient(String village, int patientId, String name, String gender, String dateOfBirth, int parentId, String allergies, JSONObject encoding) {
         this.village = village;
         this.patientId = patientId;
         this.name = name;
@@ -40,9 +42,10 @@ public class Patient {
         this.dateOfBirth = dateOfBirth;
         this.parentId = parentId;
         this.allergies = allergies; 
+        this.facialEncoding = encoding;
     }
     
-    public Patient(String village, int patientId, String name, String contactNo, String gender, String dateOfBirth, int travellingTimeToClinic, int parentId, String allergies) {
+    public Patient(String village, int patientId, String name, String contactNo, String gender, String dateOfBirth, int travellingTimeToClinic, int parentId, String allergies, JSONObject encoding) {
         this.village = village;
         this.patientId = patientId;
         this.name = name;
@@ -52,6 +55,7 @@ public class Patient {
         this.parentId = parentId;
         this.travellingTimeToClinic = travellingTimeToClinic;
         this.allergies = allergies; 
+        this.facialEncoding = encoding;
     }
 
     public int getTravellingTimeToClinic() {
@@ -140,6 +144,10 @@ public class Patient {
     
     public byte[] getFingerprint() {
         return fingerprint;
+    }
+    
+    public JSONObject getFaceEncoding(){
+        return facialEncoding;
     }
 
     public void setFingerprint(byte[] fingerprint) {

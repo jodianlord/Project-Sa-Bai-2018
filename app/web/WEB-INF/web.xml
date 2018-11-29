@@ -24,10 +24,6 @@
         <servlet-class>servlet.CreatePatientServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>CreatePatientServlet2</servlet-name>
-        <servlet-class>servlet.CreatePatientServlet2</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>ClearFingerprint</servlet-name>
         <servlet-class>servlet.ClearFingerprint</servlet-class>
     </servlet>
@@ -114,10 +110,6 @@
     <servlet-mapping>
         <servlet-name>CreatePatientServlet</servlet-name>
         <url-pattern>/CreatePatientServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>CreatePatientServlet2</servlet-name>
-        <url-pattern>/CreatePatientServlet2</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>ClearFingerprint</servlet-name>
