@@ -47,7 +47,7 @@ public class PatientDAO {
             pstmt.setString(5, p.getGender());
             pstmt.setInt(6, p.getTravellingTimeToClinic());
             pstmt.setString(7, p.getDateOfBirth());
-            pstmt.setString(8, "hiiii");
+            pstmt.setString(8, p.getFaceEncoding().toString());
             //Executes the update and stores data into database
             int affectedRows = pstmt.executeUpdate();
 
