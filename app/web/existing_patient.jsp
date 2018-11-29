@@ -237,7 +237,7 @@
                             String imgName = "";
                             
                             try {
-                                imgName = "\\\\JM-ASUS-LAPTOP\\patient-images\\" + patientRecord.getPhotoImage();
+                                imgName = "/home/sabai/" + patientRecord.getPhotoImage();
                                 BufferedImage bImage = ImageIO.read(new File(imgName));//give the path of an image
                                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                                 ImageIO.write(bImage, "jpg", baos);

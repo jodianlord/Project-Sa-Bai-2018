@@ -12,6 +12,7 @@ $(document).ready(function () {
         url: "ClearFingerprint",
         success: function (msg) {
             console.log(msg);
+            //window.location.href = "existing_patient.jsp";
         },
         error: function (request, status, error) {
             console.log(request);
@@ -49,15 +50,22 @@ $(document).ready(function () {
 
     $("#submitPhotoBtn").click(function () {
         console.log("img " + img1);
+
+        picJSON = {};
+        picJSON["picture"] = img1;
+        
         if (img1.length > 0) {
-            var extension = img1.substring(img1.indexOf('/') + 1, img1.indexOf(';'));
-            //console.log(img1.substring(img1.indexOf('/') + 1, img1.indexOf(';')));
-            
-            var imgFile = dataURLtoFile(img1, "imgFile." + extension);
-            console.log(imgFile);
-            
-            var formData = new FormData();
-            formData.append("image", img1);
+            $.ajax({
+                url: "./SearchPatientFaceServlet",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(picJSON),
+                success: function(response){
+                    console.log("face looking");
+                }, error: function(xhr){
+
+                }
+            })
             
             
         }

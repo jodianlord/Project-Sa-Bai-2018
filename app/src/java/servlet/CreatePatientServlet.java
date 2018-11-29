@@ -79,7 +79,7 @@ public class CreatePatientServlet extends HttpServlet {
             //get facial encodings
             //ServletContext servletContext = this.getServletConfig().getServletContext();
             BufferedImage toEncode = decodeToImage(photoImage.substring(photoImage.indexOf(',') + 1, photoImage.length()));
-            File toEncodeFile = new File("C:\\Sabai\\image.jpeg");
+            File toEncodeFile = new File("/home/sabai/image.jpeg");
             ImageIO.write(toEncode, "jpeg", toEncodeFile);
             Map<String, File> dataMap = new HashMap<String, File>();
             dataMap.put("image", toEncodeFile);
@@ -152,7 +152,7 @@ public class CreatePatientServlet extends HttpServlet {
 //                try (OutputStream stream = new FileOutputStream(new File(servletContext.getRealPath("/") + "../../web/patient-images/" + p.getVillage() + p.getPatientId() + ".png"))) {
 //                    stream.write(photoImageByte);
 //                }
-                try (OutputStream stream = new FileOutputStream(new File("C:\\Sabai\\" + p.getVillage() + p.getPatientId() + ".png"))) {
+                try (OutputStream stream = new FileOutputStream(new File("/home/sabai/" + p.getVillage() + p.getPatientId() + ".png"))) {
                     stream.write(photoImageByte);
                 }
 

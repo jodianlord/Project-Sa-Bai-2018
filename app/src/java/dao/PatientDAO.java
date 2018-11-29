@@ -9,6 +9,9 @@ package dao;
  *
  * @author yu.fu.2015
  */
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import model.Patient;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -19,9 +22,10 @@ import java.util.*;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import util.RESTHandler;
 
 public class PatientDAO {
-    
+
     public static boolean addPatient(Patient p) {
 
         boolean insertSuccess = false;
@@ -73,7 +77,7 @@ public class PatientDAO {
         System.out.println("user should be in");
         return insertSuccess;
     }
-    
+
     public static boolean updatePatientDetails(int patientId, String village, String name, String image, String contactNo, int travellingTime, String dateOfBirth) {
 
         boolean updateSuccess = false;
@@ -117,7 +121,7 @@ public class PatientDAO {
 
         return updateSuccess;
     }
-    
+
     public static void updateImage(Patient p) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -144,12 +148,65 @@ public class PatientDAO {
             ConnectionManager.close(conn, pstmt, rs);
         }
     }
-    
+
     public static JSONObject getJSONObject(String jsonString) throws ParseException {
         JSONParser parser = new JSONParser();
         return (JSONObject) parser.parse(jsonString);
     }
-    
+
+    public static Patient getPatientByFace(JSONObject faceEncoding) {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("select * from patients where face_encodings is not null");
+            rs = stmt.executeQuery();
+            while (rs.next()) {
+                String face_encodings = rs.getString("face_encodings");
+                System.out.println("database faces");
+                System.out.println(face_encodings);
+                JSONObject faceJSON = getJSONObject(face_encodings);
+                JSONObject compareImages = new JSONObject();
+                compareImages.put("first_encoding", faceEncoding.get("encoding"));
+                compareImages.put("second_encoding", faceJSON.get("encoding"));
+                String postResult = null;
+                System.out.println(compareImages);
+                try {
+                    postResult = RESTHandler.sendPostRequest(RESTHandler.facialURL + "compareimages", compareImages, null);
+                } catch (IOException e) {
+                    continue;
+                }
+
+                JSONObject postJSON = getJSONObject(postResult);
+
+                if (postJSON.get("match").equals("true")) {
+                    String village = rs.getString("village_prefix");
+                    int patientId = rs.getInt("id");
+                    String name = rs.getString("name");
+                    String contactNo = rs.getString("contactNo");
+                    String gender = rs.getString("gender");
+                    String dateOfBirth = rs.getString("date_of_birth");
+                    int travellingTimeToClinic = rs.getInt("travelling_time_to_village");
+                    int parentId = rs.getInt("parent");
+                    String allergy = rs.getString("drug_allergy");
+                    String encoding = rs.getString("face_encodings");
+                    JSONObject encodedObj = faceJSON;
+                    Patient p = new Patient(village, patientId, name, contactNo, gender, dateOfBirth, travellingTimeToClinic, parentId, allergy, encodedObj);
+                    p.setPhotoImage(rs.getString("image"));
+                    return p;
+                }
+                //return;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static Patient getPatientByPatientID(String pVillage, int pNo) {
         Connection conn = null;
         ResultSet rs = null;
@@ -175,12 +232,12 @@ public class PatientDAO {
                 String allergy = rs.getString("drug_allergy");
                 String encoding = rs.getString("face_encodings");
                 JSONObject encodedObj;
-                if(encoding == null || encoding.length() == 0){
+                if (encoding == null || encoding.length() == 0) {
                     encodedObj = null;
-                }else{
+                } else {
                     encodedObj = getJSONObject(encoding);
                 }
-                
+
 //                allergies.add(allergy);
 //                while (rs.next()) {
 //                    allergy = rs.getInt(7);
@@ -192,7 +249,7 @@ public class PatientDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch(ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
@@ -226,9 +283,9 @@ public class PatientDAO {
                 String allergy = rs.getString("drug_allergy");
                 String encoding = rs.getString("face_encodings");
                 JSONObject encodedObj;
-                if(encoding == null || encoding.length() == 0){
+                if (encoding == null || encoding.length() == 0) {
                     encodedObj = null;
-                }else{
+                } else {
                     encodedObj = getJSONObject(encoding);
                 }
 //                allergies.add(allergy);
@@ -242,14 +299,14 @@ public class PatientDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch (ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
         return null;
     }
-    
+
     public static Patient getPatientByPatientID(int patientID) {
         Connection conn = null;
         ResultSet rs = null;
@@ -272,9 +329,9 @@ public class PatientDAO {
                 String allergy = rs.getString("drug_allergy");
                 String encoding = rs.getString("face_encodings");
                 JSONObject encodedObj;
-                if(encoding == null || encoding.length() == 0){
+                if (encoding == null || encoding.length() == 0) {
                     encodedObj = null;
-                }else{
+                } else {
                     encodedObj = getJSONObject(encoding);
                 }
 //                allergies.add(allergy);
@@ -288,7 +345,7 @@ public class PatientDAO {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } catch(ParseException e){
+        } catch (ParseException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
@@ -296,5 +353,4 @@ public class PatientDAO {
         return null;
     }
 
-    
 }
