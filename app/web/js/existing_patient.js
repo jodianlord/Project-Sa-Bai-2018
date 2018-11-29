@@ -12,7 +12,6 @@ $(document).ready(function () {
         url: "ClearFingerprint",
         success: function (msg) {
             console.log(msg);
-            //window.location.href = "existing_patient.jsp";
         },
         error: function (request, status, error) {
             console.log(request);
@@ -48,28 +47,7 @@ $(document).ready(function () {
         }
     });
 
-    $("#submitPhotoBtn").click(function () {
-        console.log("img " + img1);
-
-        picJSON = {};
-        picJSON["picture"] = img1;
-        
-        if (img1.length > 0) {
-            $.ajax({
-                url: "./SearchPatientFaceServlet",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(picJSON),
-                success: function(response){
-                    console.log("face looking");
-                }, error: function(xhr){
-
-                }
-            })
-            
-            
-        }
-    })
+    
 });
 
 function dataURLtoFile(dataurl, filename) {

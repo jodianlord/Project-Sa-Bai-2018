@@ -50,7 +50,7 @@ public class SearchPatientFaceServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+        response.setContentType("application/json");
         HttpSession session = request.getSession();
         String body = getBody(request);
         JSONObject bodyJSON = null;
@@ -108,7 +108,14 @@ public class SearchPatientFaceServlet extends HttpServlet {
             System.out.println("1235467870");
         }
         System.out.println("we found it!");
-        response.sendRedirect("existing_patient.jsp");
+        //response.sendRedirect("existing_patient.jsp");
+        JSONObject toPrint = new JSONObject();
+        toPrint.put("name", p.getName());
+        response.setStatus(HttpServletResponse.SC_OK);
+        try(PrintWriter out = response.getWriter()){
+            out.println(toPrint.toString());
+        }
+        
     }
 
     public static String getBody(HttpServletRequest request) throws IOException {

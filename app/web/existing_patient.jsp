@@ -22,6 +22,7 @@
 <%@page import="dao.VisitDAO"%>
 <%@include file="header.jsp" %>
 <%@ include file="protect.jsp" %>
+<link rel="stylesheet" href="cs-confirm.min.css">
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="margin-left: 0 !important;">
@@ -489,6 +490,33 @@
 <script src='js/array.generics.min.js'></script>
 <script src='js/jquery.min.js'></script>
 <script src="js/webcam.js"></script>
+<script src="js/jquery-confirm.min.js"></script>
 <script src='js/existing_patient.js'></script>
+<script>
+    $("#submitPhotoBtn").click(function () {
+        //console.log("img " + img1);
+
+        picJSON = {};
+        picJSON["picture"] = img1;
+        
+        if (img1.length > 0) {
+            $.ajax({
+                url: "./SearchPatientFaceServlet",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(picJSON),
+                success: function(resp){
+                    console.log("face looking");
+                    console.log(resp);
+                    alert("Your name is " + resp.name);
+                }, error: function(xhr){
+
+                }
+            })
+            
+            
+        }
+    })
+</script>    
 
 <%@include file="footer.jsp" %>
