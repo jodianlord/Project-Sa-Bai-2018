@@ -508,7 +508,7 @@
                 success: function(resp){
                     console.log("face looking");
                     console.log(resp);
-                    alert("Your name is " + resp.name);
+                    alert("Your name is " + resp.name + "and your id is" + resp.id);
                 }, error: function(xhr){
 
                 }

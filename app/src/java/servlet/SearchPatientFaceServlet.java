@@ -111,6 +111,7 @@ public class SearchPatientFaceServlet extends HttpServlet {
         //response.sendRedirect("existing_patient.jsp");
         JSONObject toPrint = new JSONObject();
         toPrint.put("name", p.getName());
+        toPrint.put("id", p.getPatientId());
         response.setStatus(HttpServletResponse.SC_OK);
         try(PrintWriter out = response.getWriter()){
             out.println(toPrint.toString());
