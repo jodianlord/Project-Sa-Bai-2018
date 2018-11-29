@@ -27,6 +27,8 @@ SET time_zone = "+00:00";
 --
 -- Table structure for table `consults`
 --
+CREATE DATABASE IF NOT EXISTS `sabai`;
+USE `sabai`;
 
 DROP TABLE IF EXISTS `consults`;
 CREATE TABLE IF NOT EXISTS `consults` (
