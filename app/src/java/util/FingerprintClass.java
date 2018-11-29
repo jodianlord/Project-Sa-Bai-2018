@@ -278,7 +278,7 @@ public class FingerprintClass {
 
         for (i = 0; i < patientList.size(); i++) {
 
-            System.out.println("fgs: " + patientList.get(i).getFgSize());
+            //System.out.println("fgs: " + patientList.get(i).getFgSize());
 
             nRes = p.UFM_IdentifyNext(hMatcher[0], patientList.get(i).getFingerprint(), patientList.get(i).getFgSize(), refIdentifyRes);
 

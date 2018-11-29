@@ -86,7 +86,7 @@ function createPatientRecord() {
 
     patientRecordsFilled = villageFilled && nameFilled && genderFilled && dateOfBirthFilled;
 
-    if (fingerprint1Taken && fingerprint2Taken && photoTaken && patientRecordsFilled) {
+    if (((fingerprint1Taken && fingerprint2Taken) || photoTaken) && patientRecordsFilled) {
         jQuery.ajax({
             type: "POST",
             url: "CreatePatientServlet",
