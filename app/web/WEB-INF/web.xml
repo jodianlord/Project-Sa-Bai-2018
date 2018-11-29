@@ -91,6 +91,10 @@
         <servlet-name>FrServlet</servlet-name>
         <servlet-class>servlet.FrServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AnnouncementServlet</servlet-name>
+        <servlet-class>servlet.AnnouncementServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>InitializeBioMiniServlet</servlet-name>
         <url-pattern>/InitializeBioMiniServlet</url-pattern>
@@ -178,6 +182,10 @@
     <servlet-mapping>
         <servlet-name>FrServlet</servlet-name>
         <url-pattern>/FrServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AnnouncementServlet</servlet-name>
+        <url-pattern>/AnnouncementServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

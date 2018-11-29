@@ -1,9 +1,27 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="servlet.AnnouncementServlet"%>
+
+
+
 <!DOCTYPE html>
 <!--
 This is a starter template page. Use this page to start your new project from
 scratch. This page gets rid of all links and provides the needed markup only.
 -->
+<% 
+//    session.setAttribute("alert",AnnouncementServlet.getAnnouncement());
+  
+    String announcementDisplayState = "none";
+            String announcementState = "warning";
+            String announcementMsg = "";
+            if (AnnouncementServlet.getAnnouncement()!= null) {
+                announcementMsg = AnnouncementServlet.getAnnouncement().toString();
+//                session.removeAttribute("alert");
+                announcementDisplayState = "block";
+                announcementState = "warning";
+            }
+%>
+
 <html>
     <head>
         <meta charset="utf-8">
@@ -91,4 +109,28 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </ul>
                     </div>
                 </nav>
+                
+
+            <div id="alertPanel" class="col-md-12">
+                
+                <div class="callout alert alert-<%=announcementState%> alert-dismissible" style="display:<%=announcementDisplayState%>">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <h4 style="margin-bottom:0;">
+
+                        <%
+                            if (announcementMsg.length() > 0) {
+                                out.println(announcementMsg);
+                            }                            
+                        %>
+
+                        <!--<i class="icon fa fa-check"></i> Alert!-->
+
+                    </h4>
+                    <!--Success alert preview. This alert is dismissable.-->
+                </div>
+            </div>
+                
+                
             </header>
+</body>
+

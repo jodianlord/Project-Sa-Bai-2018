@@ -440,6 +440,40 @@
                         </table>  
                     </div>
                 </div>
+                            
+<!--        Announcement Box Start-->
+        <div class="col-xs-12 content pull-left"> 
+            <div id="fg_box" class="box box-info box-solid" style="margin-bottom:0px">
+                
+                <div class="box-header with-border">
+                    <h3 class="box-title">Announcement Box</h3>                        
+                    <div class="box-tools pull-left">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                    </div>
+                    <!-- /.box-tools -->
+                </div>                        
+                    
+                <div class="box-body">
+                    <form action="AnnouncementServlet" method="POST" class="row">                            
+                        <div class="col-md-12">
+                                <input type="hidden" name="viewid" value="new_consult.jsp">                           
+                                <div class="form-group">
+                                    <label>Announcement Message :</label>
+                                    <textarea class="form-control" name="msg" rows="2" placeholder="Enter here..." style="height:50px"></textarea>
+                                </div>
+                                <div class="col-md-12">
+                                    <button class="btn btn-primary btn-lg" id="btn-send-announcement" type="submit">Send</button>
+                                    <!--<button class="btn btn-primary btn-lg" name="button_clicked" value="clear" id="btn-clear-announcement" type="submit">Clear</button>-->
+                                </div> 
+                        </div>
+                    </form>
+                </div>                       
+
+            </div>
+        </div>
+
+<!--Announcement Box End-->
 
             </div>
 
