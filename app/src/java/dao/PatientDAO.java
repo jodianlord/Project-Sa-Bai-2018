@@ -214,9 +214,10 @@ public class PatientDAO {
                     stmt.setInt(1, patientId);
                     ResultSet rr = stmt.executeQuery();
 
-                    File imgFile = new File("patientImg.jpeg");
+                    //File imgFile = new File("patientImg.jpeg");
+                    File imgFile = File.createTempFile("patientImg", ".jpeg");
                     FileOutputStream output = new FileOutputStream(imgFile);
-
+                    imgFile.deleteOnExit();
                     if (rr.next()) {
                         InputStream input = rr.getBinaryStream("picture_blob");
                         byte[] buffer = new byte[1024];
@@ -282,7 +283,9 @@ public class PatientDAO {
                 stmt.setInt(1, pNo);
                 ResultSet rr = stmt.executeQuery();
 
-                File imgFile = new File("patientImg.jpeg");
+                //File imgFile = new File("patientImg.jpeg");
+                File imgFile = File.createTempFile("patientImg", ".jpeg");
+                imgFile.deleteOnExit();
                 FileOutputStream output = new FileOutputStream(imgFile);
 
                 if (rr.next()) {
@@ -359,7 +362,9 @@ public class PatientDAO {
                 stmt.setInt(1, patientId);
                 ResultSet rr = stmt.executeQuery();
 
-                File imgFile = new File("patientImg.jpeg");
+                //File imgFile = new File("patientImg.jpeg");
+                File imgFile = File.createTempFile("patientImg", ".jpeg");
+                imgFile.deleteOnExit();
                 FileOutputStream output = new FileOutputStream(imgFile);
 
                 if (rr.next()) {
@@ -427,11 +432,12 @@ public class PatientDAO {
                 stmt.setInt(1, patientId);
                 ResultSet rr = stmt.executeQuery();
 
-                File imgFile = new File("patientImg.jpeg");
+                //File imgFile = new File("patientImg.jpeg");
+                File imgFile = File.createTempFile("patientImg", "jpeg");
                 FileOutputStream output = new FileOutputStream(imgFile);
-
+                imgFile.deleteOnExit();
                 if (rr.next()) {
-                    InputStream input = rs.getBinaryStream("picture_blob");
+                    InputStream input = rr.getBinaryStream("picture_blob");
                     byte[] buffer = new byte[1024];
                     while (input.read(buffer) > 0) {
                         output.write(buffer);
