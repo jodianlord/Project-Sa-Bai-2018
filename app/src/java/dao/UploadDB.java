@@ -12,13 +12,21 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+import servlet.CreatePatientServlet;
+import static servlet.CreatePatientServlet.getJSONObject;
 import util.ConnectionManager;
+import util.RESTHandler;
 
 /**
  *
  * @author jordy
  */
-
 //note: please copy the connection.properties file to the util package for this to work
 public class UploadDB {
 
@@ -28,7 +36,7 @@ public class UploadDB {
     public static void main(String[] args) {
         File dir = new File("/home/jordy/Documents/patient-images-backup/patient-images-241217-1641hrs/");
         File[] directoryListing = dir.listFiles();
-        uploadDB(directoryListing);
+        generateEncodings(directoryListing);
     }
 
     public static void changeToJPEG(File[] fileArr) {
@@ -38,6 +46,55 @@ public class UploadDB {
                 String fileNoExt = fileName.substring(0, fileName.indexOf('.'));
                 String jpegString = fileNoExt + ".jpeg";
                 child.renameTo(new File("/home/jordy/Documents/patient-images-backup/patient-images-241217-1641hrs/" + jpegString));
+            }
+        }
+    }
+
+    public static void generateEncodings(File[] fileArr) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        for (File child : fileArr) {
+            String fileName = child.getName();
+            if (fileName.contains("jpeg")) {
+                Map<String, File> dataMap = new HashMap<String, File>();
+                dataMap.put("image", child);
+                JSONObject verificationEncoding = null;
+                try {
+                    String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
+                    if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
+                        verificationEncoding = getJSONObject(verificationEncodingString);
+                        System.out.println(verificationEncoding.toString());
+                    } else {
+                        verificationEncoding = null;
+                    }
+
+                } catch (ParseException ex) {
+                    Logger.getLogger(CreatePatientServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    conn = ConnectionManager.getConnection();
+                    pstmt = conn.prepareStatement("UPDATE patients SET face_encodings = ? where id = ?");
+                    String pID = fileName.substring(fileName.indexOf('V') + 1, fileName.indexOf('.'));
+                    int dbID = Integer.parseInt(pID);
+                    pstmt.setString(1, verificationEncoding.toString());
+                    pstmt.setInt(2, dbID);
+                    pstmt.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    continue;
+                } catch (NumberFormatException e) {
+                    continue;
+                } catch(NullPointerException e){
+                    continue;
+                }finally {
+                    dao.ConnectionManager.close(conn, pstmt, rs);
+                }
             }
         }
     }
@@ -55,9 +112,9 @@ public class UploadDB {
                     String pID = fileName.substring(fileName.indexOf('V') + 1, fileName.indexOf('.'));
                     System.out.println(pID);
                     int dbID = 0;
-                    try{
+                    try {
                         dbID = Integer.parseInt(pID);
-                    }catch(NumberFormatException e){
+                    } catch (NumberFormatException e) {
                         continue;
                     }
                     pstmt.setInt(1, dbID);
