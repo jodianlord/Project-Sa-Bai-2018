@@ -109,7 +109,6 @@ public class SearchPatientFaceServlet extends HttpServlet {
             session.setAttribute("searchError", "Patient not found!");
             System.out.println("1235467870");
         }
-        System.out.println("we found it!");
         //response.sendRedirect("existing_patient.jsp");
         JSONObject toPrint = new JSONObject();
         toPrint.put("name", p.getName());

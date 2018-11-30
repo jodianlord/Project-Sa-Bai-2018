@@ -135,7 +135,7 @@ public class RESTHandler {
                 }
             }
 
-            System.out.println(content.toString());
+            //System.out.println(content.toString());
 
             return content.toString();
         } finally {

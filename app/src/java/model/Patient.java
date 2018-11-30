@@ -68,6 +68,10 @@ public class Patient {
     public File getImageFile(){
         return imageFile;
     }
+    
+    public void setImageFile(File image){
+        this.imageFile = image;
+    }
 
     public int getTravellingTimeToClinic() {
         return travellingTimeToClinic;

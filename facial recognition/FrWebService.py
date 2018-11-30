@@ -31,12 +31,12 @@ def compareimages():
     first_encoding = np.array(data['first_encoding'])
     second_encoding = np.array(data['second_encoding'])
     results = face_recognition.compare_faces([first_encoding], second_encoding, tolerance=0.4)
-    print(results[0])
+    #print(results[0])
 
     rObj = {'match': str(results[0]).lower()}
-    data_json = json.dumps(rObj)
+    #data_json = json.dumps(rObj)
 
-    print(data_json)
+    #print(data_json)
 
     response = app.response_class(
         response=json.dumps(rObj),
@@ -137,4 +137,4 @@ def facialreg():
     )
 
 if __name__=='__main__':
-    app.run(debug=True, port=5000)
+    app.run(debug=True, port=5000, threaded=True)
