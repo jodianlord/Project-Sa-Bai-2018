@@ -7,7 +7,10 @@ package dao;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,15 +31,16 @@ import util.RESTHandler;
  * @author jordy
  */
 //note: please copy the connection.properties file to the util package for this to work
-public class UploadDB {
+public class DBTools {
 
     Connection conn = null;
     PreparedStatement pstmt = null;
 
     public static void main(String[] args) {
-        File dir = new File("/home/jordy/Documents/patient-images-backup/patient-images-241217-1641hrs/");
-        File[] directoryListing = dir.listFiles();
-        generateEncodings(directoryListing);
+        //File dir = new File("/home/jordy/Documents/patient-images-backup/patient-images-241217-1641hrs/");
+        //File[] directoryListing = dir.listFiles();
+        //generateEncodings(directoryListing);
+        getFiles("/home/jordy/Desktop/test/");
     }
 
     public static void changeToJPEG(File[] fileArr) {
@@ -48,6 +52,41 @@ public class UploadDB {
                 child.renameTo(new File("/home/jordy/Documents/patient-images-backup/patient-images-241217-1641hrs/" + jpegString));
             }
         }
+    }
+
+    public static void getFiles(String directory) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionManager.getConnection();
+            pstmt = conn.prepareStatement("SELECT patients.id, patients.village_prefix, patient_pictures.picture_blob FROM patients inner join patient_pictures on patients.id=patient_pictures.patient_id");
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+
+                String village = rs.getString("village_prefix");
+                int id = rs.getInt("id");
+
+                File imgFile = new File(directory + village + id + ".jpeg");
+                FileOutputStream output = new FileOutputStream(imgFile);
+
+                InputStream input = rs.getBinaryStream("picture_blob");
+                byte[] buffer = new byte[1024];
+                while (input.read(buffer) > 0) {
+                    output.write(buffer);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            dao.ConnectionManager.close(conn, pstmt, rs);
+        }
+
     }
 
     public static void generateEncodings(File[] fileArr) {
@@ -90,9 +129,9 @@ public class UploadDB {
                     continue;
                 } catch (NumberFormatException e) {
                     continue;
-                } catch(NullPointerException e){
+                } catch (NullPointerException e) {
                     continue;
-                }finally {
+                } finally {
                     dao.ConnectionManager.close(conn, pstmt, rs);
                 }
             }
