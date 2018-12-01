@@ -69,6 +69,7 @@ function createPatientRecord() {
     var gender = $("input[name='gender']:checked").val();
     var dateOfBirth = $("#dateOfBirth").val();
     var travellingTimeToClinic = $("#travellingTimeToClinic").val();
+    var allergies = $("#allergies").val();
 
 //    console.log(patientID);
     console.log(village);
@@ -97,7 +98,8 @@ function createPatientRecord() {
                 gender: gender,
                 dateOfBirth: dateOfBirth.trim(),
                 travellingTimeToClinic: travellingTimeToClinic,
-                photoImage: img1
+                photoImage: img1,
+                allergies: allergies
             },
             success: function (msg) {
                 console.log(msg);
@@ -176,7 +178,8 @@ function createPatientRecord2() {
     var gender = $("input[name='gender']:checked").val();
     var dateOfBirth = $("#dateOfBirth").val();
     var travellingTimeToClinic = $("#travellingTimeToClinic").val();
-
+    var allergies = $("#allergies").val();
+    console.log(allergies);
 //    console.log(patientID);
     console.log(village);
     console.log(name);
@@ -204,7 +207,8 @@ function createPatientRecord2() {
                 gender: gender,
                 dateOfBirth: dateOfBirth.trim(),
                 travellingTimeToClinic: travellingTimeToClinic,
-                photoImage: img1
+                photoImage: img1,
+                allergies: allergies
             },
             success: function (msg) {
                 console.log(msg);

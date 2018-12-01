@@ -51,7 +51,7 @@ public class PatientDAO {
 
             //Statement to insert information into the database: user_id, password, name, school, edollar
             pstmt = conn.prepareStatement("INSERT INTO sabai.patients "
-                    + "(village_prefix, name, image, contactNo, gender, travelling_time_to_village, date_of_birth, face_encodings) VALUES (?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
+                    + "(village_prefix, name, image, contactNo, gender, travelling_time_to_village, date_of_birth, face_encodings, drug_allergy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
 
 //            System.out.println("imageLength" + fgImage.length);
             //Sets the objects retrieved from the getter methods into the variables
@@ -63,6 +63,8 @@ public class PatientDAO {
             pstmt.setInt(6, p.getTravellingTimeToClinic());
             pstmt.setString(7, p.getDateOfBirth());
             pstmt.setString(8, p.getFaceEncoding().toString());
+            pstmt.setString(9, p.getAllergies());
+            System.out.println(pstmt.toString());
             //Executes the update and stores data into database
             int affectedRows = pstmt.executeUpdate();
 

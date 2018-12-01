@@ -4,6 +4,7 @@
     Author     : tcw
 --%>
 
+<%@page import="java.util.Calendar"%>
 <%@page import="java.nio.file.Files"%>
 <%@page import="java.io.IOException"%>
 <%@page import="javax.xml.bind.DatatypeConverter"%>
@@ -248,7 +249,7 @@
                                             <%
                                                 String dateOfBirth = patientRecord.getDateOfBirth();
                                                 int yearOfBirth = Integer.parseInt(dateOfBirth.substring(0, 4));
-                                                int age = 2017 - yearOfBirth;
+                                                int age = Calendar.getInstance().get(Calendar.YEAR) - yearOfBirth;
                                                 out.println(age);
                                             %>
                                         </div>
@@ -263,11 +264,13 @@
                                                 String output = "No allergies";
                                                 String[] allergyList = null;
                                                 if (patientRecord.getAllergies() != null) {
+                                                    /*
                                                     allergyList = patientRecord.getAllergies().split(",");
                                                     output = "";
                                                     for (String s : allergyList) {
                                                         output += s + "<br/>";
-                                                    }
+                                                    }*/
+                                                    output = patientRecord.getAllergies();
                                                 }
                                             %>
 

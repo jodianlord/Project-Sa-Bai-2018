@@ -147,6 +147,13 @@
                             <label for="dateOfBirth">Date of Birth</label>
                             <input class="form-control" type="date" name="dateOfBirth" id="dateOfBirth">
                         </div>
+                        
+                        <div class="from-group">
+                            <label for="allergies">Allergies</label>
+                            <input class="form-control" type="text" name="allergies" id="allergies" placeholder="Enter all allergies here">
+                        </div>
+                        
+                        <br>
 
                         <div class = "row">
                             <div class="form-group col-md-6">

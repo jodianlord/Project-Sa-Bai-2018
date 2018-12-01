@@ -74,8 +74,10 @@ public class CreatePatientServlet extends HttpServlet {
             String dateOfBirth = request.getParameter("dateOfBirth");
             String travellingTimeToClinic = request.getParameter("travellingTimeToClinic");
             String photoImage = request.getParameter("photoImage");
+            String allergies = request.getParameter("allergies");
 
             System.out.println("photo: " + photoImage);
+            System.out.println("ALLERGYENTER: " + allergies);
             //System.out.println("path: " + request.getRequestURI().substring(request.getContextPath().length()));
 
             //get facial encodings
@@ -127,8 +129,9 @@ public class CreatePatientServlet extends HttpServlet {
                 return;
             }
 
-            Patient p = new Patient(village, 0, name, contactNo, gender, dateOfBirth, Integer.parseInt(travellingTimeToClinic), 0, null, verificationEncoding, toEncodeFile);
-
+            Patient p = new Patient(village, 0, name, contactNo, gender, dateOfBirth, Integer.parseInt(travellingTimeToClinic), 0, allergies, verificationEncoding, toEncodeFile);
+            //p.setAllergies(allergies);
+            System.out.println("ALLERGIES: " + p.getAllergies());
             PatientDAO.addPatient(p);
 
             patientCorrect = true;
