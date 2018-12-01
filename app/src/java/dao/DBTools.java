@@ -37,7 +37,7 @@ public class DBTools {
     PreparedStatement pstmt = null;
 
     public static void main(String[] args) {
-        File dir = new File("C:\\Users\\jodia\\Desktop\\patient-images-backup\\patient-images-241217-1641hrs\\");
+        File dir = new File("C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
         File[] directoryListing = dir.listFiles();
         //generateEncodings(directoryListing);
         //getFiles("/home/jordy/Desktop/test/");
@@ -51,7 +51,7 @@ public class DBTools {
                 String fileName = child.getName();
                 String fileNoExt = fileName.substring(0, fileName.indexOf('.'));
                 String jpegString = fileNoExt + ".jpeg";
-                child.renameTo(new File("C:\\Users\\jodia\\Desktop\\patient-images-backup\\patient-images-241217-1641hrs\\" + jpegString));
+                child.renameTo(new File("C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\" + jpegString));
             }
         }
     }

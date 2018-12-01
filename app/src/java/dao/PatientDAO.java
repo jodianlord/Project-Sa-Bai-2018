@@ -36,7 +36,7 @@ import util.CompareFaces;
 import util.RESTHandler;
 
 public class PatientDAO {
-
+    private static int threads = 10;
     public static boolean addPatient(Patient p) {
 
         boolean insertSuccess = false;
@@ -210,9 +210,24 @@ public class PatientDAO {
             ConnectionManager.close(conn, stmt, rs);
         }
 
-        ExecutorService executor = Executors.newFixedThreadPool(10);
+        ExecutorService executor = Executors.newFixedThreadPool(50);
         List<Future<Patient>> list = new ArrayList<Future<Patient>>();
-
+        
+        int listSize = patientList.size() / threads;
+        int currentMarker = 0;
+        for(int i = 0; i < threads; i++){
+            List<Patient> qList;
+            if(i == threads - 1){
+                qList = patientList.subList(currentMarker, patientList.size());
+            }else{
+                qList = patientList.subList(currentMarker, currentMarker + listSize);
+            }
+            Future<Patient> fut = executor.submit(new CompareFaces(qList, faceEncoding));
+            list.add(fut);
+            currentMarker += listSize;
+        }
+        
+        /*
         List<Patient> q1 = patientList.subList(0, patientList.size() / 2);
         List<Patient> q2 = patientList.subList(patientList.size() / 2, patientList.size());
         Collections.reverse(q2);
@@ -227,7 +242,7 @@ public class PatientDAO {
         list.add(future2);
         //list.add(future3);
         //list.add(future4);
-
+        */
         for (Future<Patient> fut : list) {
             try {
                 Patient toReturn = fut.get();
@@ -268,7 +283,6 @@ public class PatientDAO {
                 ConnectionManager.close(conn, stmt, rs);
             }
         }
-        ConnectionManager.close(conn, stmt, rs);
         return null;
     }
 
