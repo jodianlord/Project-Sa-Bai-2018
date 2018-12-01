@@ -515,7 +515,8 @@
                 success: function(resp){
                     console.log("face looking");
                     console.log(resp);
-                    alert("Your name is " + resp.name + " and your id is " + resp.village + resp.id);
+                    //alert("Your name is " + resp.name + " and your id is " + resp.village + resp.id);
+                    window.location.href = window.location.href
                 }, error: function(xhr){
 
                 }

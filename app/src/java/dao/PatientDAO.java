@@ -283,6 +283,7 @@ public class PatientDAO {
                 ConnectionManager.close(conn, stmt, rs);
             }
         }
+        executor.shutdown();
         return null;
     }
 
