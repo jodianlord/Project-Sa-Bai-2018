@@ -181,7 +181,9 @@ var Webcam = {
 				}
 			})
 			.then( function(stream) {
+                                video.srcObject = stream;
 				// got access, attach stream to video
+                                /*
 				video.onloadedmetadata = function(e) {
 					self.stream = stream;
 					self.loaded = true;
@@ -190,7 +192,16 @@ var Webcam = {
 					self.dispatch('live');
 					self.flip();
 				};
-				video.src = window.URL.createObjectURL( stream ) || stream;
+                                
+                                video.src = window.URL.createObjectURL( stream ) || stream;
+                                
+                                try{
+                                    this.srcObject = stream;
+                                }catch(error){
+                                    video.src = window.URL.createObjectURL( stream ) || stream;
+                                }
+                                */
+				
 			})
 			.catch( function(err) {
 				// JH 2016-07-31 Instead of dispatching error, now falling back to Flash if userMedia fails (thx @john2014)
@@ -573,7 +584,7 @@ var Webcam = {
 		var self = this;
 		var params = this.params;
 		
-		if (!this.loaded) return this.dispatch('error', new WebcamError("Webcam is not loaded yet"));
+		// if (!this.loaded) return this.dispatch('error', new WebcamError("Webcam is not loaded yet"));
 		// if (!this.live) return this.dispatch('error', new WebcamError("Webcam is not live yet"));
 		if (!user_callback) return this.dispatch('error', new WebcamError("Please provide a callback function or canvas to snap()"));
 		
