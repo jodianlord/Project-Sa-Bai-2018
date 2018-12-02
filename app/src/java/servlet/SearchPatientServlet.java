@@ -10,6 +10,8 @@ import dao.VisitDAO;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -37,30 +39,53 @@ public class SearchPatientServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         HttpSession session = request.getSession();
         String inputPatientID = request.getParameter("patientID");
-
         String pVillage;
+        Patient p = null;
         int pNo = -1;
-
-        if (inputPatientID == null || inputPatientID.length() < 4) {
+        System.out.println(inputPatientID);
+        if (inputPatientID == null) {
             session.setAttribute("searchError", "Patient not found!");
             response.sendRedirect("existing_patient.jsp");
             return;
         }
 
-        pVillage = inputPatientID.substring(0, 3);
-        try {
-            pNo = Integer.parseInt(inputPatientID.substring(3));
-        } catch (Exception e) {
+        Pattern vil_id = Pattern.compile("([a-z])([a-z])([a-z])(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher vil_id_matcher = vil_id.matcher(inputPatientID);
 
+        Pattern name_alph = Pattern.compile("([a-z ])+", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher name_alph_matcher = name_alph.matcher(inputPatientID);
+        
+        Pattern num = Pattern.compile("(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher num_matcher = num.matcher(inputPatientID);
+
+        if (vil_id_matcher.matches()) {
+            System.out.println("match");
+            pVillage = inputPatientID.substring(0, 3);
+            try {
+                pNo = Integer.parseInt(inputPatientID.substring(3));
+            } catch (Exception e) {
+
+            }
+
+            if (pNo == -1) {
+                session.setAttribute("searchError", "Patient not found!");
+                response.sendRedirect("existing_patient.jsp");
+                return;
+            }
+
+            p = PatientDAO.getPatientByPatientID(pVillage, pNo);
+        }else if(name_alph_matcher.matches()){
+            p = PatientDAO.getPatientByName(inputPatientID);
+        }else if(num_matcher.matches()){
+            try {
+                pNo = Integer.parseInt(inputPatientID);
+            } catch (Exception e) {
+                session.setAttribute("searchError", "Patient not found!");
+                response.sendRedirect("existing_patient.jsp");
+                return;
+            }
+            p = PatientDAO.getPatientByPatientID(pNo);
         }
-
-        if (pNo == -1) {
-            session.setAttribute("searchError", "Patient not found!");
-            response.sendRedirect("existing_patient.jsp");
-            return;
-        }
-
-        Patient p = PatientDAO.getPatientByPatientID(pVillage, pNo);
 
         if (p == null) {
             session.setAttribute("searchError", "Patient not found!");
@@ -82,6 +107,7 @@ public class SearchPatientServlet extends HttpServlet {
             session.setAttribute("searchError", "Patient not found!");
             System.out.println("1235467870");
         }
+
         response.sendRedirect("existing_patient.jsp");
     }
 

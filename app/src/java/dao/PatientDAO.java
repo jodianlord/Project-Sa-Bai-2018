@@ -311,6 +311,85 @@ public class PatientDAO {
         return null;
     }
 
+    public static Patient getPatientByName(String search) {
+        Connection conn = null;
+        ResultSet rs = null;
+        PreparedStatement stmt = null;
+        try {
+            String[] spaceSplit = search.split("\\s+");
+            String toSearch = "%";
+            for (String s : spaceSplit) {
+                toSearch += s;
+                toSearch += "%";
+            }
+            toSearch += "%";
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("SELECT * FROM PATIENTS WHERE name LIKE ?");
+            stmt.setString(1, toSearch);
+            System.out.println(stmt);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                String village = rs.getString("village_prefix");
+                int patientId = rs.getInt("id");
+                String name = rs.getString("name");
+                String contactNo = rs.getString("contactNo");
+                String gender = rs.getString("gender");
+                String dateOfBirth = rs.getString("date_of_birth");
+                int travellingTimeToClinic = rs.getInt("travelling_time_to_village");
+                int parentId = rs.getInt("parent");
+                String allergy = rs.getString("drug_allergy");
+                String encoding = rs.getString("face_encodings");
+                JSONObject encodedObj;
+                if (encoding == null || encoding.length() == 0) {
+                    encodedObj = null;
+                } else {
+                    encodedObj = getJSONObject(encoding);
+                }
+
+                stmt = conn.prepareStatement("select * from patient_pictures where patient_id = ?");
+                stmt.setInt(1, patientId);
+                ResultSet rr = stmt.executeQuery();
+
+                //File imgFile = new File("patientImg.jpeg");
+                File imgFile = File.createTempFile("patientImg", ".jpeg");
+                imgFile.deleteOnExit();
+                FileOutputStream output = new FileOutputStream(imgFile);
+
+                if (rr.next()) {
+                    InputStream input = rr.getBinaryStream("picture_blob");
+                    byte[] buffer = new byte[1024];
+                    while (input.read(buffer) > 0) {
+                        output.write(buffer);
+                    }
+                } else {
+                    imgFile = null;
+                }
+
+//                allergies.add(allergy);
+//                while (rs.next()) {
+//                    allergy = rs.getInt(7);
+//                    allergies.add(allergy);
+//                }
+                Patient p = new Patient(village, patientId, name, contactNo, gender, dateOfBirth, travellingTimeToClinic, parentId, allergy, encodedObj, imgFile);
+                p.setPhotoImage(rs.getString("image"));
+                return p;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        return null;
+    }
+
     public static Patient getPatientByPatientID(String pVillage, int pNo) {
         Connection conn = null;
         ResultSet rs = null;
@@ -323,7 +402,6 @@ public class PatientDAO {
             stmt.setString(2, pVillage);
             rs = stmt.executeQuery();
 
-            ArrayList<Integer> allergies = new ArrayList<>();
             if (rs.next()) {
                 String village = rs.getString("village_prefix");
                 int patientId = rs.getInt("id");
