@@ -12,10 +12,16 @@ package model;
 public class Drug {
     private String medicine_name;
     private int quantity;
-
-    public Drug(String medicine_name, int quantity) {
+    private int id;
+    
+    public Drug(int id, String medicine_name, int quantity) {
         this.medicine_name = medicine_name;
         this.quantity = quantity;
+        this.id = id;
+    }
+    
+    public int getID(){
+        return id;
     }
 
     public String getMedicine_name() {
@@ -33,6 +39,4 @@ public class Drug {
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-    
-    
 }

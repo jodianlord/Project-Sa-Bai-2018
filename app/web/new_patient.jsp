@@ -129,7 +129,8 @@
                             <select name="village" id="village" class="form-control">
                                 <option value="PCV" selected>PCV</option>
                                 <option value="KSV">KSV</option>
-
+                                <option value="PGV">PGV</option>
+                                <option value="TTV">TTV</option>
                             </select>
                         </div>
 

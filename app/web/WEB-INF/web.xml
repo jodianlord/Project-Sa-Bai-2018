@@ -95,6 +95,10 @@
         <servlet-name>SearchPatientFaceServlet</servlet-name>
         <servlet-class>servlet.SearchPatientFaceServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>InventoryServlet</servlet-name>
+        <servlet-class>servlet.InventoryServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>InitializeBioMiniServlet</servlet-name>
         <url-pattern>/InitializeBioMiniServlet</url-pattern>
@@ -186,6 +190,10 @@
     <servlet-mapping>
         <servlet-name>SearchPatientFaceServlet</servlet-name>
         <url-pattern>/SearchPatientFaceServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>InventoryServlet</servlet-name>
+        <url-pattern>/InventoryServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

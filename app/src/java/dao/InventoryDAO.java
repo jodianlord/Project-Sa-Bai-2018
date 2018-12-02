@@ -26,14 +26,15 @@ public class InventoryDAO {
 
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("Select * from inventory");
+            stmt = conn.prepareStatement("Select * from inventory order by id");
             rs = stmt.executeQuery();
 
             while (rs.next()) {
                 String medicine = rs.getString("medicine_name");
                 int quantity = rs.getInt("quantity");
+                int id = rs.getInt("id");
                 
-                drugList.add(new Drug(medicine, quantity));
+                drugList.add(new Drug(id, medicine, quantity));
             }
             //Returns the converted array to the caller of method
             return drugList;

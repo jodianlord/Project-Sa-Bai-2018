@@ -24,6 +24,8 @@
             <select>
                 <option name="villageName" value="PCV">PCV</option>
                 <option name="villageName" value="KSV">KSV</option>
+                <option name="villageName" value="PGV">PGV</option>
+                <option name="villageName" value="TTV">TTV</option>
             </select>
 
         </div>
@@ -37,8 +39,7 @@
 
         <div>
             Doctor: 
-            <%
-                UserDAO userDao = new UserDAO();
+            <%                UserDAO userDao = new UserDAO();
                 ArrayList<String> doctorList = UserDAO.retrieveAllDoctors();
 
                 Collections.sort(doctorList, new Comparator<String>() {
@@ -82,7 +83,8 @@
                                 Collections.sort(drugList, new Comparator<Drug>() {
                                     @Override
                                     public int compare(Drug drug1, Drug drug2) {
-                                        return Integer.parseInt(drug1.getMedicine_name().split("\\.")[0]) - Integer.parseInt(drug2.getMedicine_name().split("\\.")[0]);
+                                        return drug1.getID() - drug2.getID();
+                                        //return Integer.parseInt(drug1.getMedicine_name().split("\\.")[0]) - Integer.parseInt(drug2.getMedicine_name().split("\\.")[0]);
                                     }
                                 });
                             %>
