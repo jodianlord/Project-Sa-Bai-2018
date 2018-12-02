@@ -238,7 +238,8 @@
                                     Collections.sort(drugList, new Comparator<Drug>() {
                                         @Override
                                         public int compare(Drug drug1,Drug drug2) {
-                                            return Integer.parseInt(drug1.getMedicine_name().split("\\.")[0]) - Integer.parseInt(drug2.getMedicine_name().split("\\.")[0]);
+                                            return drug1.getID() - drug2.getID();
+                                            //return Integer.parseInt(drug1.getMedicine_name().split("\\.")[0]) - Integer.parseInt(drug2.getMedicine_name().split("\\.")[0]);
                                         }
                                     });
                                      

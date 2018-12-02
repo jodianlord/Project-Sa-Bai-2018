@@ -12,35 +12,37 @@
 <%@page import="dao.InventoryDAO"%>
 <%@include file="header.jsp" %>
 
-<form action="AdditionalOrderServlet" method="post">
-    <div class="box box-info box-solid">
-        <div class="box-header with-border">
-            <h3 class="box-title">View/Edit Inventory</h3>
-            <!-- /.box-tools -->
-        </div>
 
-        </br>
+<div class="box box-info box-solid" style="width:50%; margin:0 auto;" >
+    <div class="box-header with-border">
+        <h3 class="box-title">View/Edit Inventory</h3>
+        <!-- /.box-tools -->
+    </div>
 
-        <!-- /.box-header -->
-        <div class="box-body">
-            <table class="table" id="issueMedicine">
-                <tbody id="medBody">
-                    <tr>
-                        <th>#</th>
-                        <th>Medicine</th>
-                        <th>Quantity</th>
-                    </tr>
-                </tbody>
-            </table>
-            <hr>
-            <div style="float:left">
-                <span class="input-group-btn" style="width:0;padding-right:10px">
-                    <button type="submit" class="btn btn-info btn-flat">Place Order</button>
-                </span>
-            </div>
+    </br>
+
+    <!-- /.box-header -->
+    <div class="box-body">
+        <table class="table" id="issueMedicine">
+            <tbody id="medBody">
+                <tr>
+                    <th>#</th>
+                    <th>Medicine</th>
+                    <th>Quantity</th>
+                </tr>
+            </tbody>
+        </table>
+        <hr>
+        <div style="float:left">
+            <span class="input-group-btn" style="width:0;padding-right:10px">
+                <button id="add" class="btn btn-danger btn-flat">Add Entry</button>
+            </span>
+            <span class="input-group-btn" style="width:0;padding-right:10px">
+                <button id="submit" type="submit" class="btn btn-info btn-flat">Update Inventory</button>
+            </span>
         </div>
     </div>
-</form>
+</div>
 <script src="js/jquery.min.js"></script>
 <script src="js/inventory.js"></script>
 <%@include file="footer.jsp" %>
