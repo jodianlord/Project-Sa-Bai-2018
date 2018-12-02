@@ -52,7 +52,7 @@ public class PatientDAO {
             conn = ConnectionManager.getConnection();
 
             //Statement to insert information into the database: user_id, password, name, school, edollar
-            pstmt = conn.prepareStatement("INSERT INTO sabai.patients "
+            pstmt = conn.prepareStatement("INSERT INTO patients "
                     + "(village_prefix, name, image, contactNo, gender, travelling_time_to_village, date_of_birth, face_encodings, drug_allergy) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);", Statement.RETURN_GENERATED_KEYS);
 
 //            System.out.println("imageLength" + fgImage.length);
@@ -324,7 +324,7 @@ public class PatientDAO {
             }
             toSearch += "%";
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("SELECT * FROM PATIENTS WHERE name LIKE ?");
+            stmt = conn.prepareStatement("SELECT * FROM patients WHERE name LIKE ?");
             stmt.setString(1, toSearch);
             System.out.println(stmt);
             rs = stmt.executeQuery();

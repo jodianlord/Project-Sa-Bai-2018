@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -71,9 +72,9 @@ public class SearchPatientFaceServlet extends HttpServlet {
         ImageIO.write(toEncode, "jpeg", toEncodeFile);
         Map<String, File> dataMap = new HashMap<String, File>();
         dataMap.put("image", toEncodeFile);
-        String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
         JSONObject verificationEncoding = null;
         try {
+            String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
             if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
                 verificationEncoding = getJSONObject(verificationEncodingString);
                 System.out.println(verificationEncoding.toString());
@@ -85,6 +86,8 @@ public class SearchPatientFaceServlet extends HttpServlet {
             Logger.getLogger(CreatePatientServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NullPointerException ex) {
             ex.printStackTrace();
+        } catch(ConnectException e){
+            e.printStackTrace();
         }
         toEncodeFile.delete();
         Patient p = PatientDAO.getPatientByFace(verificationEncoding);

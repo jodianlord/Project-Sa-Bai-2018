@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -100,8 +101,8 @@ public class UpdatePatientServlet extends HttpServlet {
                 ImageIO.write(toEncode, "jpeg", toEncodeFile);
                 Map<String, File> dataMap = new HashMap<String, File>();
                 dataMap.put("image", toEncodeFile);
-                String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
                 try {
+                    String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
                     if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
                         verificationEncoding = getJSONObject(verificationEncodingString);
                         System.out.println(verificationEncoding.toString());
@@ -113,6 +114,8 @@ public class UpdatePatientServlet extends HttpServlet {
                     Logger.getLogger(CreatePatientServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
+                } catch(ConnectException e){
+                    e.printStackTrace();
                 }
                 
                 
