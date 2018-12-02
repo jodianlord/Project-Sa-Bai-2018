@@ -74,7 +74,61 @@ $("#submit").click(function(){
                     quantity = this.value;
                 });
             }
-        })
-        console.log(id + " " + med + " " + quantity);
-    })
+        });
+        if(id != null && med.length != 0){
+            var medObj = {};
+            medObj.id = id;
+            medObj.name = med;
+            medObj.quantity = quantity;
+            updateObj.push(medObj);
+        }
+    });
+    $.ajax({
+        url: "./InventoryServlet",
+        type: "GET",
+        contentType: "application/json",
+        success: function (resp) {
+            var insertArr = null;
+            var changeArr = null;
+            if(updateObj.length > resp.length){
+                insertArr = [];
+                for(var i = (updateObj.length - 1); i > (resp.length - 1); i--){
+                    insertArr.push(updateObj[i]);
+                }
+            }
+
+            for(var i = 0; i < resp.length; i++){
+                var obj = resp[i];
+                var medName = Object.keys(obj)[0];
+                var quantity = obj[medName];
+
+                if(quantity != updateObj[i].quantity){
+                    if(changeArr == null){
+                        changeArr = [];
+                    }
+                    changeArr.push(updateObj[i]);
+                }
+            }
+            var sendObj = {};
+            sendObj.insert = insertArr;
+            sendObj.change = changeArr;
+            console.log(JSON.stringify(sendObj));
+
+            $.ajax({
+                url: "./InventoryServlet",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(sendObj),
+                success: function(){
+                    window.location.href = window.location.href;
+                }, error: function(xhr){
+                    alert("Update failed!");
+                }
+            })
+
+        }, error: function (xhr) {
+
+        }
+    });
+    console.log(updateObj);
 });

@@ -71,6 +71,87 @@ public class InventoryDAO {
         return 0;
     }
     
+    public static boolean changeQuantity(Drug dr){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try{
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("UPDATE inventory SET quantity = ? WHERE id = ?");
+            stmt.setInt(1, dr.getQuantity());
+            stmt.setInt(2, dr.getID());
+            stmt.executeUpdate();
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }finally{
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
+    public static boolean reorderInventory(){
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            pstmt = conn.prepareStatement("SELECT medicine_name, quantity FROM inventory order by medicine_name");
+            rs = pstmt.executeQuery();
+            ArrayList<Drug> drugList = new ArrayList<Drug>();
+            int counter = 1;
+            while (rs.next()) {
+                String medicine = rs.getString("medicine_name");
+                int quantity = rs.getInt("quantity");
+                drugList.add(new Drug(counter, medicine, quantity));
+                counter++;
+            }
+            System.out.println(drugList.size());
+            
+            pstmt = conn.prepareStatement("DELETE FROM inventory WHERE id <= " + drugList.size());
+            
+            pstmt.executeUpdate();
+            pstmt = conn.prepareStatement("ALTER TABLE inventory AUTO_INCREMENT = 1");
+            pstmt.executeUpdate();
+            
+            for(Drug drug : drugList){
+                System.out.println(drug.getMedicine_name());
+                pstmt = conn.prepareStatement("INSERT INTO inventory(medicine_name, quantity) VALUES(?, ?)");
+                pstmt.setString(1, drug.getMedicine_name());
+                pstmt.setInt(2, drug.getQuantity());
+                pstmt.executeUpdate();
+            }
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }finally{
+            ConnectionManager.close(conn, pstmt, rs);
+        }
+    }
+    
+    public static boolean addDrug(Drug dr){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        try{
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("INSERT INTO inventory VALUES (?, ?, ?)");
+            stmt.setInt(1, dr.getID());
+            stmt.setString(2, dr.getMedicine_name());
+            stmt.setInt(3, dr.getQuantity());
+            stmt.executeUpdate();
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }finally{
+            ConnectionManager.close(conn, stmt, rs);
+        }
+    }
+    
     public static boolean updateInventoryStatus(int orderID){
         Connection conn = null;
         PreparedStatement stmt = null;
