@@ -39,13 +39,14 @@ public class DBTools {
     PreparedStatement pstmt = null;
 
     public static void main(String[] args) {
-        File dir = new File("C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
-        File[] directoryListing = dir.listFiles();
+        //File dir = new File("C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
+        //File[] directoryListing = dir.listFiles();
         //generateEncodings(directoryListing);
         //getFiles("/home/jordy/Desktop/test/");
         //changeToJPEG(directoryListing);
         //uploadDB(directoryListing);
-        unfuckInventory();
+        //unfuckInventory();
+        deleteMedicine("Order Testing");
     }
 
     public static void changeToJPEG(File[] fileArr) {
@@ -56,6 +57,48 @@ public class DBTools {
                 String jpegString = fileNoExt + ".jpeg";
                 child.renameTo(new File("C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\" + jpegString));
             }
+        }
+    }
+    
+    public static void deleteMedicine(String med){
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            pstmt = conn.prepareStatement("DELETE FROM inventory where medicine_name = ?");
+            pstmt.setString(1, med);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("SELECT medicine_name, quantity FROM inventory order by medicine_name");
+            rs = pstmt.executeQuery();
+            ArrayList<Drug> drugList = new ArrayList<Drug>();
+            int counter = 1;
+            while (rs.next()) {
+                String medicine = rs.getString("medicine_name");
+                int quantity = rs.getInt("quantity");
+                drugList.add(new Drug(counter, medicine, quantity));
+                counter++;
+            }
+            System.out.println(drugList.size());
+            
+            pstmt = conn.prepareStatement("DELETE FROM inventory WHERE id < 500");
+            
+            pstmt.executeUpdate();
+            pstmt = conn.prepareStatement("ALTER TABLE inventory AUTO_INCREMENT = 1");
+            pstmt.executeUpdate();
+            
+            for(Drug drug : drugList){
+                System.out.println(drug.getMedicine_name());
+                pstmt = conn.prepareStatement("INSERT INTO inventory(medicine_name, quantity) VALUES(?, ?)");
+                pstmt.setString(1, drug.getMedicine_name());
+                pstmt.setInt(2, drug.getQuantity());
+                pstmt.executeUpdate();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }finally{
+            ConnectionManager.close(conn, pstmt, rs);
         }
     }
     
