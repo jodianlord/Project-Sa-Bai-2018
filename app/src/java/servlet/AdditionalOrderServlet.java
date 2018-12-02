@@ -42,7 +42,6 @@ public class AdditionalOrderServlet extends HttpServlet {
         int orderId = OrderDAO.getOrderIdByPatientId(patientNumber);
         Order order = new Order(0, doctorName, patientNumber, medicineName, quantity, regimen, remarks);
         boolean successful = orderDao.addOrders(orderId, order);
-        System.out.println(successful);
         response.sendRedirect("index.jsp");
     }
 

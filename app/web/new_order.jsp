@@ -12,32 +12,33 @@
 <%@page import="dao.InventoryDAO"%>
 <%@include file="header.jsp" %>
 
-<form action="AdditionalOrderServlet" method="post">
-    <div class="box box-info box-solid">
+<form action="AdditionalOrderServlet" method="post" style="background-color:white">
+    <div class="box box-info box-solid" style="width:50%; margin:0 auto;" >
         <div class="box-header with-border">
             <h3 class="box-title">Issue Medicine</h3>
             <!-- /.box-tools -->
         </div>
-
-        <div>
-            Village:
-            <select>
-                <option name="villageName" value="PCV">PCV</option>
-                <option name="villageName" value="KSV">KSV</option>
-                <option name="villageName" value="PGV">PGV</option>
-                <option name="villageName" value="TTV">TTV</option>
-            </select>
-
-        </div>
-
-        <div>
+        <!--    
+                <div>
+                    Village:
+                    <select>
+                        <option name="villageName" value="PCV">PCV</option>
+                        <option name="villageName" value="KSV">KSV</option>
+                        <option name="villageName" value="PGV">PGV</option>
+                        <option name="villageName" value="TTV">TTV</option>
+                    </select>
+        
+                </div>
+        -->
+        <br>
+        <div style="margin-left: 1em">
             Patient Number:
-            <input type="text" name="patientNumber" placeholder="numbers only">
+            <input type="number" min="0" name="patientNumber" placeholder="numbers only">
         </div>
 
         </br>
 
-        <div>
+        <div style="margin-left: 1em">
             Doctor: 
             <%                UserDAO userDao = new UserDAO();
                 ArrayList<String> doctorList = UserDAO.retrieveAllDoctors();
@@ -99,7 +100,7 @@
                             </select>
                         </td>
                         <td>
-                            <input name="quantity" placeholder="Quantity" class="form-control" type="number" required/>
+                            <input name="quantity" placeholder="Quantity" class="form-control" type="number" min="0" required/>
                         </td>
                         <td>
                             <input name="regimen" placeholder="Regimen" class="form-control" type="text">

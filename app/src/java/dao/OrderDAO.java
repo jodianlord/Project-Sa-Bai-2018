@@ -174,7 +174,7 @@ public class OrderDAO {
                 String notes = rs.getString("notes");
                 String remarks = rs.getString("remarks");
                 
-                System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
+                //System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
                 
                 orderList.add(new Order(orderID,consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
             }

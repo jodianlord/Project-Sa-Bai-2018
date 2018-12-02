@@ -13,7 +13,7 @@
 <%@include file="header.jsp" %>
 
 
-<div class="box box-info box-solid" style="width:50%; margin:0 auto;" >
+<div class="box box-info box-solid" style="width:50%; margin:0 auto; background-color:white" >
     <div class="box-header with-border">
         <h3 class="box-title">View/Edit Inventory</h3>
         <!-- /.box-tools -->
