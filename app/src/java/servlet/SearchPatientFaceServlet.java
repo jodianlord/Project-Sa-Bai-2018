@@ -91,7 +91,8 @@ public class SearchPatientFaceServlet extends HttpServlet {
 
         if (p == null) {
             session.setAttribute("searchError", "Patient not found!");
-            response.sendRedirect("existing_patient.jsp");
+            //response.sendRedirect("existing_patient.jsp");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
         }
 
@@ -108,6 +109,8 @@ public class SearchPatientFaceServlet extends HttpServlet {
         } else {
             session.setAttribute("searchError", "Patient not found!");
             System.out.println("1235467870");
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            return;
         }
         //response.sendRedirect("existing_patient.jsp");
         JSONObject toPrint = new JSONObject();

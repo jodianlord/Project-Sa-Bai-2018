@@ -23,7 +23,6 @@
 <%@page import="dao.VisitDAO"%>
 <%@include file="header.jsp" %>
 <%@ include file="protect.jsp" %>
-<link rel="stylesheet" href="cs-confirm.min.css">
 
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="margin-left: 0 !important;">
@@ -513,12 +512,13 @@
                 contentType: "application/json",
                 data: JSON.stringify(picJSON),
                 success: function(resp){
-                    console.log("face looking");
-                    console.log(resp);
+                    //console.log("face looking");
+                    //console.log(resp);
                     //alert("Your name is " + resp.name + " and your id is " + resp.village + resp.id);
                     window.location.href = window.location.href
                 }, error: function(xhr){
-
+                    alert("Patient not found!");
+                    window.location.href = window.location.href
                 }
             })
             

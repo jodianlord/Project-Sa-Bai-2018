@@ -5,13 +5,13 @@ var patientRecordsFilled = false;
 var img1 = "";
 
 $(document).ready(function () {
-//    Identify();
+//    Identify();console.log
     $("#submitPhotoBtn").hide();
     jQuery.ajax({
         type: "POST",
         url: "ClearFingerprint",
         success: function (msg) {
-            console.log(msg);
+            
         },
         error: function (request, status, error) {
             console.log(request);
