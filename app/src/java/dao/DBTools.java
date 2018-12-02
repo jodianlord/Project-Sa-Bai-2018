@@ -43,19 +43,19 @@ public class DBTools {
         //File[] directoryListing = dir.listFiles();
         //generateEncodings(directoryListing);
         //getFiles("/home/jordy/Desktop/test/");
-        //changeToJPEG(directoryListing);
+        //changeToJPEG(directoryListing, "C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
         //uploadDB(directoryListing);
         //unfuckInventory();
         deleteMedicine("Order Testing");
     }
 
-    public static void changeToJPEG(File[] fileArr) {
+    public static void changeToJPEG(File[] fileArr, String directory) {
         if (fileArr != null) {
             for (File child : fileArr) {
                 String fileName = child.getName();
                 String fileNoExt = fileName.substring(0, fileName.indexOf('.'));
                 String jpegString = fileNoExt + ".jpeg";
-                child.renameTo(new File("C:\\Users\\Jordy\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\" + jpegString));
+                child.renameTo(new File(directory + jpegString));
             }
         }
     }
