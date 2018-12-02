@@ -65,6 +65,7 @@ function updatePatientRecord() {
     var contactNo = $("#phoneNumber").val();
     var dateOfBirth = $("#dateOfBirth").val();
     var travellingTimeToClinic = $("#travellingTimeToClinic").val();
+    var allergies = $("#allergies").val();
 
     console.log(patientId);
     console.log(village);
@@ -92,7 +93,8 @@ function updatePatientRecord() {
                 contactNo: contactNo,
                 dateOfBirth: dateOfBirth.trim(),
                 travellingTimeToClinic: travellingTimeToClinic,
-                photoImage: img1
+                photoImage: img1,
+                allergies: allergies
             },
             success: function (msg) {
                 console.log(msg);

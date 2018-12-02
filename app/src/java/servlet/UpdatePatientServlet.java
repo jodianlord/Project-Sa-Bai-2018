@@ -6,12 +6,18 @@
 package servlet;
 
 import dao.PatientDAO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +26,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Patient;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
+import static servlet.CreatePatientServlet.decodeToImage;
+import static servlet.CreatePatientServlet.getJSONObject;
+import util.RESTHandler;
 
 /**
  *
@@ -44,7 +55,7 @@ public class UpdatePatientServlet extends HttpServlet {
             HttpSession session = request.getSession();
             boolean patientCorrect = false;
             boolean photoCorrect = false;
-            
+
             String village = request.getParameter("village");
             int patientId = Integer.parseInt(request.getParameter("patientId"));
             String name = request.getParameter("name");
@@ -52,9 +63,10 @@ public class UpdatePatientServlet extends HttpServlet {
             String dateOfBirth = request.getParameter("dateOfBirth");
             String travellingTimeToClinic = request.getParameter("travellingTimeToClinic");
             String photoImage = request.getParameter("photoImage");
+            String allergies = request.getParameter("allergies");
 
             String imageString = village + patientId + ".png";
-            
+
             System.out.println(village);
             System.out.println(patientId);
             System.out.println(name);
@@ -73,19 +85,39 @@ public class UpdatePatientServlet extends HttpServlet {
                 System.out.println("RealPath = " + servletContext.getRealPath("/"));
                 System.out.println("user.dir = " + System.getProperty("user.dir"));
 
-//                try (OutputStream stream = new FileOutputStream(new File(servletContext.getRealPath("/") + "../../web/patient-images/" + imageString), false)) {
-//                    stream.write(photoImageByte);
-//                    System.out.println("Write to patient-images successful");
-//                }
-                
-                try (OutputStream stream = new FileOutputStream(new File("\\\\JM-ASUS-LAPTOP\\patient-images\\" + imageString), false)) {
-                    stream.write(photoImageByte);
-                    System.out.println("Write to patient-images successful");
+            }
+            File toEncodeFile = null;
+            JSONObject verificationEncoding = null;
+            if (photoImage != null && photoImage.length() != 0) {
+                //get facial encodings
+                //ServletContext servletContext = this.getServletConfig().getServletContext();
+                BufferedImage toEncode = decodeToImage(photoImage.substring(photoImage.indexOf(',') + 1, photoImage.length()));
+                //File toEncodeFile = new File("image.jpeg");
+                toEncodeFile = File.createTempFile("image", ".jpeg");
+                toEncodeFile.deleteOnExit();
+                ImageIO.write(toEncode, "jpeg", toEncodeFile);
+                Map<String, File> dataMap = new HashMap<String, File>();
+                dataMap.put("image", toEncodeFile);
+                String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
+                try {
+                    if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
+                        verificationEncoding = getJSONObject(verificationEncodingString);
+                        System.out.println(verificationEncoding.toString());
+                    } else {
+                        verificationEncoding = null;
+                    }
+
+                } catch (ParseException ex) {
+                    Logger.getLogger(CreatePatientServlet.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (NullPointerException ex) {
+                    ex.printStackTrace();
                 }
+                
+                
             }
             
-            boolean updateSuccessful = PatientDAO.updatePatientDetails(patientId, village, name, imageString, contactNo, Integer.parseInt(travellingTimeToClinic), dateOfBirth);
-            
+            boolean updateSuccessful = PatientDAO.updatePatientDetails(patientId, village, name, imageString, contactNo, Integer.parseInt(travellingTimeToClinic), dateOfBirth, allergies, toEncodeFile, verificationEncoding.toString());
+
             if (updateSuccessful) {
                 System.out.println("successfully update patient details");
                 Patient patientRecord = PatientDAO.getPatientByPatientID(village, patientId);

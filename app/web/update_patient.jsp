@@ -98,6 +98,11 @@
                                 <input type="number" class="form-control" id="travellingTimeToClinic" name="travellingTimeToClinic" value="<%=patientRecord.getTravellingTimeToClinic()%>">
                             </div>
                         </div>
+                            
+                            <div class="form-group">
+                            <label for="allergies">Update Allergies</label>
+                            <input class="form-control" type="text" name="dateOfBirth" id="allergies" value="<%=patientRecord.getAllergies()%>">
+                        </div>
                     </div>
                     <!-- /.box-body -->
                 </div>

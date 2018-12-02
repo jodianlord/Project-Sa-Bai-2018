@@ -36,7 +36,9 @@ import util.CompareFaces;
 import util.RESTHandler;
 
 public class PatientDAO {
+
     private static int threads = 10;
+
     public static boolean addPatient(Patient p) {
 
         boolean insertSuccess = false;
@@ -101,7 +103,7 @@ public class PatientDAO {
         return insertSuccess;
     }
 
-    public static boolean updatePatientDetails(int patientId, String village, String name, String image, String contactNo, int travellingTime, String dateOfBirth) {
+    public static boolean updatePatientDetails(int patientId, String village, String name, String image, String contactNo, int travellingTime, String dateOfBirth, String allergies, File imageFile, String encoding) {
 
         boolean updateSuccess = false;
 
@@ -114,17 +116,28 @@ public class PatientDAO {
             conn = ConnectionManager.getConnection();
 
             //Statement to insert information into the database: user_id, password, name, school, edollar
-            pstmt = conn.prepareStatement("UPDATE patients SET name = ?, image = ?, contactNo = ?, travelling_time_to_village = ?, date_of_birth = ? WHERE id = ? && village_prefix = ?");
-
-//            System.out.println("imageLength" + fgImage.length);
-            //Sets the objects retrieved from the getter methods into the variables
-            pstmt.setString(1, name);
-            pstmt.setString(2, image);
-            pstmt.setString(3, contactNo);
-            pstmt.setInt(4, travellingTime);
-            pstmt.setString(5, dateOfBirth);
-            pstmt.setInt(6, patientId);
-            pstmt.setString(7, village);
+            if (encoding == null) {
+                pstmt = conn.prepareStatement("UPDATE patients SET name = ?, image = ?, contactNo = ?, travelling_time_to_village = ?, date_of_birth = ?, drug_allergy = ? WHERE id = ? && village_prefix = ?");
+                pstmt.setString(1, name);
+                pstmt.setString(2, image);
+                pstmt.setString(3, contactNo);
+                pstmt.setInt(4, travellingTime);
+                pstmt.setString(5, dateOfBirth);
+                pstmt.setString(6, allergies);
+                pstmt.setInt(7, patientId);
+                pstmt.setString(8, village);
+            } else {
+                pstmt = conn.prepareStatement("UPDATE patients SET name = ?, image = ?, contactNo = ?, travelling_time_to_village = ?, date_of_birth = ?, drug_allergy = ?, face_encodings = ? WHERE id = ? && village_prefix = ?");
+                pstmt.setString(1, name);
+                pstmt.setString(2, image);
+                pstmt.setString(3, contactNo);
+                pstmt.setInt(4, travellingTime);
+                pstmt.setString(5, dateOfBirth);
+                pstmt.setString(6, allergies);
+                pstmt.setString(7, encoding);
+                pstmt.setInt(8, patientId);
+                pstmt.setString(9, village);
+            }
 
             //Executes the update and stores data into database
             int affectedRows = pstmt.executeUpdate();
@@ -135,8 +148,17 @@ public class PatientDAO {
                 updateSuccess = true;
             }
 
+            if (imageFile != null) {
+                pstmt = conn.prepareStatement("UPDATE patient_pictures SET picture_blob = ? WHERE patient_id = ?");
+                pstmt.setBinaryStream(1, new FileInputStream(imageFile));
+                pstmt.setInt(2, patientId);
+                pstmt.executeUpdate();
+            }
+
             //Catches any possible SQL exception
         } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
@@ -214,21 +236,21 @@ public class PatientDAO {
 
         ExecutorService executor = Executors.newFixedThreadPool(50);
         List<Future<Patient>> list = new ArrayList<Future<Patient>>();
-        
+
         int listSize = patientList.size() / threads;
         int currentMarker = 0;
-        for(int i = 0; i < threads; i++){
+        for (int i = 0; i < threads; i++) {
             List<Patient> qList;
-            if(i == threads - 1){
+            if (i == threads - 1) {
                 qList = patientList.subList(currentMarker, patientList.size());
-            }else{
+            } else {
                 qList = patientList.subList(currentMarker, currentMarker + listSize);
             }
             Future<Patient> fut = executor.submit(new CompareFaces(qList, faceEncoding));
             list.add(fut);
             currentMarker += listSize;
         }
-        
+
         /*
         List<Patient> q1 = patientList.subList(0, patientList.size() / 2);
         List<Patient> q2 = patientList.subList(patientList.size() / 2, patientList.size());
@@ -244,7 +266,7 @@ public class PatientDAO {
         list.add(future2);
         //list.add(future3);
         //list.add(future4);
-        */
+         */
         for (Future<Patient> fut : list) {
             try {
                 Patient toReturn = fut.get();
