@@ -68,6 +68,8 @@ var Webcam = {
 	
 	hooks: {}, // callback hook functions
 	
+	streamObj: null,
+
 	init: function() {
 		// initialize, check for getUserMedia support
 		var self = this;
@@ -181,7 +183,8 @@ var Webcam = {
 				}
 			})
 			.then( function(stream) {
-                                video.srcObject = stream;
+								video.srcObject = stream;
+								self.streamObj = stream;
 				// got access, attach stream to video
                                 /*
 				video.onloadedmetadata = function(e) {
@@ -250,6 +253,10 @@ var Webcam = {
 		
 		// attempt to fix issue #64
 		this.unflip();
+
+		this.streamObj.getVideoTracks().forEach(function (track) {
+			track.stop();
+		});
 		
 		if (this.userMedia) {
 			if (this.stream) {
@@ -667,7 +674,9 @@ var Webcam = {
 			img.onload = func;
 			img.src = 'data:image/'+this.params.image_format+';base64,' + raw_data;
 		}
-		
+		this.streamObj.getVideoTracks().forEach(function(track){
+			track.stop();
+		});
 		return null;
 	},
 	

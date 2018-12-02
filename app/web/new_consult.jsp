@@ -264,13 +264,12 @@
                                                 String output = "No allergies";
                                                 String[] allergyList = null;
                                                 if (patientRecord.getAllergies() != null) {
-                                                    /*
                                                     allergyList = patientRecord.getAllergies().split(",");
                                                     output = "";
                                                     for (String s : allergyList) {
                                                         output += s + "<br/>";
-                                                    }*/
-                                                    output = patientRecord.getAllergies();
+                                                    }
+                                                    //output = patientRecord.getAllergies();
                                                 }
                                             %>
 
@@ -732,7 +731,7 @@
                                                 Collections.sort(drugList, new Comparator<Drug>() {
                                                     @Override
                                                     public int compare(Drug drug1, Drug drug2) {
-                                                        return Integer.parseInt(drug1.getMedicine_name().split("\\.")[0]) - Integer.parseInt(drug2.getMedicine_name().split("\\.")[0]);
+                                                        return drug1.getID() - drug2.getID();
                                                     }
                                                 });
 

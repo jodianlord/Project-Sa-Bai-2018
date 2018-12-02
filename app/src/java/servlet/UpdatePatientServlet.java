@@ -88,7 +88,9 @@ public class UpdatePatientServlet extends HttpServlet {
             }
             File toEncodeFile = null;
             JSONObject verificationEncoding = null;
-            if (photoImage != null && photoImage.length() != 0) {
+            System.out.println("image: " + photoImage);
+            if (photoImage != null && photoImage.length() != 0 && !photoImage.equals("default")) {
+                
                 //get facial encodings
                 //ServletContext servletContext = this.getServletConfig().getServletContext();
                 BufferedImage toEncode = decodeToImage(photoImage.substring(photoImage.indexOf(',') + 1, photoImage.length()));
@@ -116,7 +118,12 @@ public class UpdatePatientServlet extends HttpServlet {
                 
             }
             
-            boolean updateSuccessful = PatientDAO.updatePatientDetails(patientId, village, name, imageString, contactNo, Integer.parseInt(travellingTimeToClinic), dateOfBirth, allergies, toEncodeFile, verificationEncoding.toString());
+            String verEncodeStr = null;
+            if(verificationEncoding != null){
+                verEncodeStr = verificationEncoding.toString();
+            }
+            
+            boolean updateSuccessful = PatientDAO.updatePatientDetails(patientId, village, name, imageString, contactNo, Integer.parseInt(travellingTimeToClinic), dateOfBirth, allergies, toEncodeFile, verEncodeStr);
 
             if (updateSuccessful) {
                 System.out.println("successfully update patient details");

@@ -9,7 +9,7 @@ $(document).ready(function () {
         type: "POST",
         url: "ClearFingerprint",
         success: function (msg) {
-            console.log(msg);
+            //console.log(msg);
         },
         error: function (request, status, error) {
             console.log(request);
@@ -97,7 +97,6 @@ function updatePatientRecord() {
                 allergies: allergies
             },
             success: function (msg) {
-                console.log(msg);
                 if (msg.status === "null") {
                     $("#alertPanel>div").css("display", "block").addClass("alert-warning").removeClass("alert-success");
                     $("#alertPanel>div>h4").html("Update of patient details failed, please restart");
