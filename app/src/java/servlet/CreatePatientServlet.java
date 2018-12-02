@@ -35,7 +35,6 @@ import model.Visit;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import sun.misc.BASE64Decoder;
 import util.FingerprintClass;
 import util.RESTHandler;
 
@@ -201,8 +200,9 @@ public class CreatePatientServlet extends HttpServlet {
         BufferedImage image = null;
         byte[] imageByte;
         try {
-            BASE64Decoder decoder = new BASE64Decoder();
-            imageByte = decoder.decodeBuffer(imageString);
+            //BASE64Decoder decoder = new BASE64Decoder();
+            //imageByte = decoder.decodeBuffer(imageString);
+            imageByte = Base64.getDecoder().decode(imageString);
             ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
             image = ImageIO.read(bis);
             bis.close();
