@@ -13,6 +13,7 @@ $(document).ready(function () {
         var list = JSON.parse(ajax.responseText);
         new Awesomplete(input, {list: list});
     };
+    
     ajax.send();
     jQuery.ajax({
         type: "POST",

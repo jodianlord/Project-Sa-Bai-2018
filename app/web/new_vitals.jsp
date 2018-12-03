@@ -17,7 +17,7 @@
 <%@page import="model.Patient"%>
 <%@include file="header.jsp" %>
 <%@include file="protect.jsp" %>
-
+<link rel="stylesheet" href="css/awesomplete.css" />
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="margin-left: 0 !important;">
     <!-- Content Header (Page header) -->
@@ -139,7 +139,7 @@
                             <form action="SearchPatientLatestVisitServlet" method="POST">
                                 <input type="hidden" name="source" value="triage">
                                 <div class="input-group">
-                                    <input type="text" name="patientID" placeholder="Enter Patient ID" class="form-control">
+                                    <input type="text" name="patientID" id="patientID" placeholder="Enter Patient ID" class="form-control">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-info btn-flat">Search</button>
                                     </span>
@@ -350,7 +350,7 @@
         margin: 0; 
     }
 </style>
-
+<script src="js/awesomplete.min.js" async></script>
 <script src='js/array.generics.min.js'></script>
 <script src='js/jquery.min.js'></script>
 <script src="js/webcam.js"></script>
