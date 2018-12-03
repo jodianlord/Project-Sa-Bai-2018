@@ -52,7 +52,7 @@ public class SearchPatientServlet extends HttpServlet {
         Pattern vil_id = Pattern.compile("([a-z])([a-z])([a-z])(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         Matcher vil_id_matcher = vil_id.matcher(inputPatientID);
 
-        Pattern name_alph = Pattern.compile("([a-z ])+", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Pattern name_alph = Pattern.compile("([a-z()' ])+", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
         Matcher name_alph_matcher = name_alph.matcher(inputPatientID);
         
         Pattern num = Pattern.compile("(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
