@@ -6,7 +6,14 @@ var img1 = "";
 
 $(document).ready(function () {
 //    Identify();
-
+    var input = document.getElementById("patientID");
+    var ajax = new XMLHttpRequest();
+    ajax.open("GET", "./AutocompleteServlet", true);
+    ajax.onload = function () {
+        var list = JSON.parse(ajax.responseText);
+        new Awesomplete(input, {list: list});
+    };
+    ajax.send();
     jQuery.ajax({
         type: "POST",
         url: "ClearFingerprint",

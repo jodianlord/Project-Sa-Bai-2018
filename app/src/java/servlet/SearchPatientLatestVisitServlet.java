@@ -8,6 +8,8 @@ package servlet;
 import dao.PatientDAO;
 import dao.VisitDAO;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -37,25 +39,22 @@ public class SearchPatientLatestVisitServlet extends HttpServlet {
         /* TODO output your page here. You may use following sample code. */
         HttpSession session = request.getSession();
 
+        Patient p = null;
+
         String patientIdInput = request.getParameter("patientID");
         int visitIdInput = 0;
         try {
             visitIdInput = Integer.parseInt(request.getParameter("visitID"));
         } catch (Exception e) {
+
         }
 
         String source = request.getParameter("source");
 
-//            int visitId = -1;
-//            try {
-//                visitId = Integer.parseInt(visitIdInput);
-//            } catch (NumberFormatException nfe) {
-//            }
         String pVillage = "";
         int pNo = -1;
 
-        if (patientIdInput == null || patientIdInput.length() < 4) {
-//                out.println("1");
+        if (patientIdInput == null) {
             session.setAttribute("visitError", "Patient/Visit not found!");
             if (source.equals("consult")) {
                 response.sendRedirect("new_consult.jsp");
@@ -67,27 +66,56 @@ public class SearchPatientLatestVisitServlet extends HttpServlet {
             return;
         }
 
-        pVillage = patientIdInput.substring(0, 3);
-        try {
-            pNo = Integer.parseInt(patientIdInput.substring(3));
-        } catch (Exception e) {
+        Pattern vil_id = Pattern.compile("([a-z])([a-z])([a-z])(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher vil_id_matcher = vil_id.matcher(patientIdInput);
 
-        }
+        Pattern name_alph = Pattern.compile("([a-z()' ])+", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher name_alph_matcher = name_alph.matcher(patientIdInput);
 
-        if (pNo == -1) {
-            session.setAttribute("visitError", "Patient/Visit not found!");
-            if (source.equals("consult")) {
-                response.sendRedirect("new_consult.jsp");
-            } else if (source.equals("postreferral")) {
-                response.sendRedirect("new_postreferral.jsp");
-            } else {
-                response.sendRedirect("new_vitals.jsp");
+        Pattern num = Pattern.compile("(\\d+)", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        Matcher num_matcher = num.matcher(patientIdInput);
+
+        if (vil_id_matcher.matches()) {
+            System.out.println("match");
+            pVillage = patientIdInput.substring(0, 3);
+            try {
+                pNo = Integer.parseInt(patientIdInput.substring(3));
+            } catch (Exception e) {
+
             }
-            return;
+
+            if (pNo == -1) {
+                session.setAttribute("visitError", "Patient/Visit not found!");
+                if (source.equals("consult")) {
+                    response.sendRedirect("new_consult.jsp");
+                } else if (source.equals("postreferral")) {
+                    response.sendRedirect("new_postreferral.jsp");
+                } else {
+                    response.sendRedirect("new_vitals.jsp");
+                }
+                return;
+            }
+
+            p = PatientDAO.getPatientByPatientID(pVillage, pNo);
+        } else if (name_alph_matcher.matches()) {
+            p = PatientDAO.getPatientByName(patientIdInput);
+        } else if (num_matcher.matches()) {
+            try {
+                pNo = Integer.parseInt(patientIdInput);
+            } catch (Exception e) {
+                session.setAttribute("visitError", "Patient/Visit not found!");
+                if (source.equals("consult")) {
+                    response.sendRedirect("new_consult.jsp");
+                } else if (source.equals("postreferral")) {
+                    response.sendRedirect("new_postreferral.jsp");
+                } else {
+                    response.sendRedirect("new_vitals.jsp");
+                }
+                return;
+            }
+            p = PatientDAO.getPatientByPatientID(pNo);
         }
-
-        Patient p = PatientDAO.getPatientByPatientID(pVillage, pNo);
-
+        
         if (p == null) {
             session.setAttribute("visitError", "Patient/Visit not found!");
             if (source.equals("consult")) {
