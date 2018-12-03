@@ -160,7 +160,7 @@
                             <form action="SearchPatientLatestVisitServlet" method="POST">
                                 <input type="hidden" name="source" value="postreferral">
                                 <div class="input-group">
-                                    <input type="text" name="patientID" id="patientID" placeholder="Enter Patient ID" class="form-control">
+                                    <input type="text" name="patientID" id="patientID" placeholder="Enter Patient ID or Name" class="form-control">
                                     <span class="input-group-btn">
                                         <button type="submit" class="btn btn-info btn-flat">Search</button>
                                     </span>
