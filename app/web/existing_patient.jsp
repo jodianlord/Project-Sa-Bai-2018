@@ -23,7 +23,7 @@
 <%@page import="dao.VisitDAO"%>
 <%@include file="header.jsp" %>
 <%@ include file="protect.jsp" %>
-
+<link rel="stylesheet" href="css/awesomplete.css" />
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper" style="margin-left: 0 !important;">
     <!-- Content Header (Page header) -->
@@ -91,12 +91,13 @@
                         <!-- /.box-tools -->
                     </div>
                     <!-- /.box-header -->
-
+                   
                     <form action="SearchPatientServlet" method="POST">
                         <div class="box-body">
                             <div class="form-group">
                                 <!--<label for="patientID">Patient ID</label>-->
                                 <input type="text" class="form-control" id="patientID" name="patientID" placeholder="Enter patient id"><br/>
+                                <br>
                                 <button class="btn btn-info" type="submit" style="width:100%">Search</button>
                             </div>
                         </div>
@@ -151,7 +152,7 @@
                     <!-- /.box-body -->
                 </div>
                 <!-- /.box -->
-                
+
                 <div id="photo_box" class="box box-info box-solid">
                     <div class="box-header with-border">
                         <h3 class="box-title">Search By Face</h3>
@@ -182,7 +183,7 @@
                                 <button id="closeCameraBtn" type="button" class="btn btn-warning cameraPanelBtns">Close Camera</button>
                                 <button id="submitPhotoBtn" type="button" class="btn btn-warning cameraPanelBtns">Submit Photo</button>
                             </div>
-            
+
                         </div>
 
                     </div>
@@ -246,9 +247,9 @@
                                 baos.flush();
                                 byte[] imageInByteArray = baos.toByteArray();
                                 baos.close();
-                                */
+                                 */
                                 File imgFile = patientRecord.getImageFile();
-                                if(imgFile != null){
+                                if (imgFile != null) {
                                     byte[] imgBytes = Files.readAllBytes(imgFile.toPath());
                                     b64 = DatatypeConverter.printBase64Binary(imgBytes);
                                 }
@@ -257,7 +258,7 @@
                         <%
                             } catch (IOException e) {
                                 System.out.println("Error: " + e);
-                            } 
+                            }
                         %>
 
                         <!--<img class="img-circle" src="patient-images/<%=patientRecord.getPhotoImage()%>" alt="User Avatar" style="width:100px; margin-right:10px;">-->     
@@ -296,7 +297,7 @@
                                         Collections.sort(visitsAL, new Comparator<Visit>() {
                                             @Override
                                             public int compare(Visit o1, Visit o2) {
-                                                return o2.getId()-o1.getId();
+                                                return o2.getId() - o1.getId();
                                             }
                                         });
 
@@ -498,33 +499,34 @@
 <script src="js/webcam.js"></script>
 <script src="js/jquery-confirm.min.js"></script>
 <script src='js/existing_patient.js'></script>
+<script src="js/awesomplete.min.js" async></script>
 <script>
-    $("#submitPhotoBtn").click(function () {
-        //console.log("img " + img1);
+$("#submitPhotoBtn").click(function () {
+    //console.log("img " + img1);
 
-        picJSON = {};
-        picJSON["picture"] = img1;
-        
-        if (img1.length > 0) {
-            $.ajax({
-                url: "./SearchPatientFaceServlet",
-                type: "POST",
-                contentType: "application/json",
-                data: JSON.stringify(picJSON),
-                success: function(resp){
-                    //console.log("face looking");
-                    //console.log(resp);
-                    //alert("Your name is " + resp.name + " and your id is " + resp.village + resp.id);
-                    window.location.href = window.location.href
-                }, error: function(xhr){
-                    alert("Patient not found!");
-                    window.location.href = window.location.href
-                }
-            })
-            
-            
-        }
-    })
+    picJSON = {};
+    picJSON["picture"] = img1;
+
+    if (img1.length > 0) {
+        $.ajax({
+            url: "./SearchPatientFaceServlet",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(picJSON),
+            success: function (resp) {
+                //console.log("face looking");
+                //console.log(resp);
+                //alert("Your name is " + resp.name + " and your id is " + resp.village + resp.id);
+                window.location.href = window.location.href
+            }, error: function (xhr) {
+                alert("Patient not found!");
+                window.location.href = window.location.href
+            }
+        })
+
+
+    }
+});
 </script>    
 
 <%@include file="footer.jsp" %>

@@ -99,6 +99,10 @@
         <servlet-name>InventoryServlet</servlet-name>
         <servlet-class>servlet.InventoryServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>AutocompleteServlet</servlet-name>
+        <servlet-class>servlet.AutocompleteServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>InitializeBioMiniServlet</servlet-name>
         <url-pattern>/InitializeBioMiniServlet</url-pattern>
@@ -194,6 +198,10 @@
     <servlet-mapping>
         <servlet-name>InventoryServlet</servlet-name>
         <url-pattern>/InventoryServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AutocompleteServlet</servlet-name>
+        <url-pattern>/AutocompleteServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

@@ -6,12 +6,22 @@ var img1 = "";
 
 $(document).ready(function () {
 //    Identify();console.log
+    var input = document.getElementById("patientID");
+    var ajax = new XMLHttpRequest();
+    ajax.open("GET", "./AutocompleteServlet", true);
+    ajax.onload = function () {
+        var list = JSON.parse(ajax.responseText);
+        new Awesomplete(input, {list: list});
+    };
+    ajax.send();
+    
+    
     $("#submitPhotoBtn").hide();
     jQuery.ajax({
         type: "POST",
         url: "ClearFingerprint",
         success: function (msg) {
-            
+
         },
         error: function (request, status, error) {
             console.log(request);
@@ -47,16 +57,16 @@ $(document).ready(function () {
         }
     });
 
-    
+
 });
 
 function dataURLtoFile(dataurl, filename) {
     var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
-        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
-    while(n--){
+            bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+    while (n--) {
         u8arr[n] = bstr.charCodeAt(n);
     }
-    return new File([u8arr], filename, {type:mime});
+    return new File([u8arr], filename, {type: mime});
 }
 
 function take_snapshot() {

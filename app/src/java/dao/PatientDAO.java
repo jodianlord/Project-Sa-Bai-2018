@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -101,6 +102,27 @@ public class PatientDAO {
         System.out.println("user should be in");
         p.getImageFile().delete();
         return insertSuccess;
+    }
+    
+    public static JSONArray getPatientNames(){
+        JSONArray result = new JSONArray();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try{
+            conn = ConnectionManager.getConnection();
+            pstmt = conn.prepareStatement("SELECT name FROM patients");
+            rs = pstmt.executeQuery();
+            
+            while(rs.next()){
+                result.add(rs.getString("name"));
+            }
+        }catch(SQLException e){
+            e.printStackTrace();
+            return null;
+        }
+        return result;
     }
 
     public static boolean updatePatientDetails(int patientId, String village, String name, String image, String contactNo, int travellingTime, String dateOfBirth, String allergies, File imageFile, String encoding) {
