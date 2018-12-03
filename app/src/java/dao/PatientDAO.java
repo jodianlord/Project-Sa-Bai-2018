@@ -38,7 +38,7 @@ import util.RESTHandler;
 
 public class PatientDAO {
 
-    private static int threads = 10;
+    private static int threads = 50;
 
     public static boolean addPatient(Patient p) {
 
