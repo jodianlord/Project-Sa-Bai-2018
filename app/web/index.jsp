@@ -137,7 +137,9 @@
                 <i class="fa fa-user-plus fa-5x"></i> <h3>Pharmacy</h3>
             </a>
             
-            
+            <a class="btn btn-app homepage-button bg-orange" href="inventory.jsp">
+                <i class="fa fa-bar-chart fa-5x"></i> <h3>Inventory</h3>
+            </a>
             <%
                 // VIEWER ONLY
                 } else if (user.getAccountType().equals("viewer")) {
