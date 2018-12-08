@@ -44,9 +44,9 @@ public class DBTools {
         //generateEncodings(directoryListing);
         //getFiles("/home/jordy/Desktop/test/");
         //changeToJPEG(directoryListing, "C:\\Users\\jodia\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
-        uploadDB(directoryListing);
+        //uploadDB(directoryListing);
         //unfuckInventory();
-        //deleteMedicine("Order Testing");
+        deleteMedicine("Order Testing");
     }
 
     public static void changeToJPEG(File[] fileArr, String directory) {
@@ -65,11 +65,13 @@ public class DBTools {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
+            /*
             conn = ConnectionManager.getConnection();
             pstmt = conn.prepareStatement("DELETE FROM inventory where medicine_name = ?");
             pstmt.setString(1, med);
             pstmt.executeUpdate();
-            
+            */
+            conn = ConnectionManager.getConnection();
             pstmt = conn.prepareStatement("SELECT medicine_name, quantity FROM inventory order by medicine_name");
             rs = pstmt.executeQuery();
             ArrayList<Drug> drugList = new ArrayList<Drug>();
