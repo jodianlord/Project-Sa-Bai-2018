@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ConnectException;
+import java.net.SocketTimeoutException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
@@ -76,8 +77,8 @@ public class CreatePatientServlet extends HttpServlet {
             String photoImage = request.getParameter("photoImage");
             String allergies = request.getParameter("allergies");
 
-            System.out.println("photo: " + photoImage);
-            System.out.println("ALLERGYENTER: " + allergies);
+            //System.out.println("photo: " + photoImage);
+            //System.out.println("ALLERGYENTER: " + allergies);
             //System.out.println("path: " + request.getRequestURI().substring(request.getContextPath().length()));
 
             //get facial encodings
@@ -90,6 +91,8 @@ public class CreatePatientServlet extends HttpServlet {
             Map<String, File> dataMap = new HashMap<String, File>();
             dataMap.put("image", toEncodeFile);
             JSONObject verificationEncoding = null;
+            Gson gs = new GsonBuilder().setPrettyPrinting().create();
+            JsonObject nullFingerprintJsonObject = new JsonObject();
             try {
                 String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
                 if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
@@ -105,11 +108,18 @@ public class CreatePatientServlet extends HttpServlet {
                 ex.printStackTrace();
             } catch(ConnectException e){
                 e.printStackTrace();
+                nullFingerprintJsonObject.addProperty("fr", "frfail");
+                out.print(gs.toJson(nullFingerprintJsonObject));
+                out.close();
+                return;
+            }catch(SocketTimeoutException e){
+                e.printStackTrace();
+                nullFingerprintJsonObject.addProperty("fr", "frfail");
             }
 
-            Gson gs = new GsonBuilder().setPrettyPrinting().create();
+            
 
-            JsonObject nullFingerprintJsonObject = new JsonObject();
+            
             nullFingerprintJsonObject.addProperty("status", "null");
 
             if (FingerprintClass.fingerprintOne == null) {
@@ -125,7 +135,7 @@ public class CreatePatientServlet extends HttpServlet {
 //                nullFingerprintJsonObject.addProperty("oneNull", "fingerprint one is null");
 //                nullFingerprintJsonObject.addProperty("twoNull", "fingerprint two is null");
             if ((nullFingerprintJsonObject.get("oneNull") != null || nullFingerprintJsonObject.get("twoNull") != null) && verificationEncoding == null) {
-                System.out.println("something is fucky wucky");
+                //System.out.println("something is fucky wucky");
                 out.print(gs.toJson(nullFingerprintJsonObject));
                 out.close();
                 return;

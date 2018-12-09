@@ -54,6 +54,7 @@ public class MultipartUtility {
          
         URL url = new URL(requestURL);
         httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setConnectTimeout(3000);
         httpConn.setUseCaches(false);
         httpConn.setDoOutput(true); // indicates POST method
         httpConn.setDoInput(true);
@@ -139,7 +140,6 @@ public class MultipartUtility {
         writer.append(LINE_FEED).flush();
         writer.append("--" + boundary + "--").append(LINE_FEED);
         writer.close();
- 
         // checks server's status code first
         int status = httpConn.getResponseCode();
         if (status == HttpURLConnection.HTTP_OK) {

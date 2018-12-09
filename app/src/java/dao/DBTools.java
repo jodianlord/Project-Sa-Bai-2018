@@ -39,10 +39,10 @@ public class DBTools {
     PreparedStatement pstmt = null;
 
     public static void main(String[] args) {
-        File dir = new File("C:\\Users\\jodia\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
+        File dir = new File("C:\\Users\\Jordy\\Desktop\\Sabaiphotos\\9122018");
         File[] directoryListing = dir.listFiles();
         //generateEncodings(directoryListing);
-        //getFiles("/home/jordy/Desktop/test/");
+        //getFiles("C:\\Users\\Jordy\\Desktop\\Sabaiphotos\\9122018\\");
         //changeToJPEG(directoryListing, "C:\\Users\\jodia\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
         uploadDB(directoryListing);
         //unfuckInventory();
@@ -65,11 +65,13 @@ public class DBTools {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         try {
+            /*
             conn = ConnectionManager.getConnection();
             pstmt = conn.prepareStatement("DELETE FROM inventory where medicine_name = ?");
             pstmt.setString(1, med);
             pstmt.executeUpdate();
-            
+            */
+            conn = ConnectionManager.getConnection();
             pstmt = conn.prepareStatement("SELECT medicine_name, quantity FROM inventory order by medicine_name");
             rs = pstmt.executeQuery();
             ArrayList<Drug> drugList = new ArrayList<Drug>();
