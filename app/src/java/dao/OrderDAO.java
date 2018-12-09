@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Consult;
 import model.Order;
 
 /**
@@ -176,9 +177,16 @@ public class OrderDAO {
                     int quantity = rs.getInt("quantity");
                     String notes = rs.getString("notes");
                     String remarks = rs.getString("remarks");
+                    Consult con = consultDAO.getConsultByVisitID(visit_id);
+                    String doctor;
+                    if(con == null || con.getDoctor() == null){
+                        doctor = "";
+                    }else{
+                        doctor = con.getDoctor();
+                    }
 
                     //System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
-                    orderList.add(new Order(orderID, consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
+                    orderList.add(new Order(orderID, doctor, visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
 
                 } catch (NullPointerException e) {
                     System.out.println("problem order ID: "  + problemID);
