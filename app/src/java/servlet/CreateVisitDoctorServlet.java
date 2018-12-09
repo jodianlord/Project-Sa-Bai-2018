@@ -37,6 +37,7 @@ public class CreateVisitDoctorServlet extends HttpServlet {
         /* TODO output your page here. You may use following sample code. */
         VisitDAO visitDAO = new VisitDAO();
         String patientID = request.getParameter("patientId");
+        System.out.println("PAtient ID: " + patientID);
         if (patientID != null) {
             try {
                 int patientId = Integer.parseInt(patientID);
@@ -53,7 +54,11 @@ public class CreateVisitDoctorServlet extends HttpServlet {
                     //request.getSession().setAttribute("patientID", patientID);
                     //request.getSession().setAttribute("successMsg", "A new visit is created");
                     
-                    response.sendRedirect("new_consult.jsp");
+                    //response.sendRedirect("new_consult.jsp");
+                    try(PrintWriter out = response.getWriter()){
+                        out.println("{status: success}");
+                        response.setStatus(HttpServletResponse.SC_OK);
+                    }
                 }
             } catch (NumberFormatException ne) {
 

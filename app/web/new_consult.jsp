@@ -382,13 +382,11 @@
                         <%
                             if (pastVisits != null) {
                         %>
-                        <div class="box-tools pull-right">
-                            <form action="CreateVisitDoctorServlet" method="POST" id="createVisitForm">
-                                <input type="hidden" name="patientId" value=<%=patientRecord.getPatientId()%> />
-                                <button type="submit" class="btn btn-box-tool" data-toggle="tooltip" title="Add New Visit" data-widget="chat-pane-toggle" style="color: black; font-size: 1em;">
-                                    <i class="fa fa-plus-circle"></i> Start New Visit
-                                </button>
-                            </form>
+                        <div class="box-tools pull-right">                       
+                            <input id="patientIDVisit" type="hidden" name="patientId" value=<%=patientRecord.getPatientId()%> />
+                            <button id="visitPatient" type="submit" class="btn btn-box-tool" data-toggle="tooltip" title="Add New Visit" data-widget="chat-pane-toggle" style="color: black; font-size: 1em;">
+                                <i class="fa fa-plus-circle"></i> Start New Visit
+                            </button>
                         </div>
                         <table class="table" >
                             <tbody>
@@ -829,7 +827,6 @@
 
 
 <script>
-//            .summaryProblemGroup
                                                     $(document).ready(function () {
                                                         var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
                                                             "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
@@ -837,6 +834,24 @@
 
 
                                                     });
+
+</script>
+<script>
+    $("#visitPatient").click(function () {
+        console.log($("#patientIDVisit").val());
+        $.ajax({
+            url: "./CreateVisitDoctorServlet",
+            type: "POST",
+            data: {
+                patientId: $("#patientIDVisit").val()
+            },
+            success: function(resp){
+                window.location.href = window.location.href;
+            },error: function(xhr){
+                alert("Invalid action!");
+            }
+        })
+    });
 </script>
 
 <%@include file="footer.jsp" %>
