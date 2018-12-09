@@ -7,29 +7,32 @@ public class Vitals {
     private double systolic;
     private double diastolic;
     private double temperature;
+    private double heartRate;
     private int hivPositive;
     private int ptbPositive;
     private int hepCPositive;
 
-    public Vitals(int visitId, double height, double weight, double systolic, double diastolic, double temperature, int hivPositive, int ptbPositive, int hepCPositive) {
+    public Vitals(int visitId, double height, double weight, double systolic, double diastolic, double temperature, double heartRate, int hivPositive, int ptbPositive, int hepCPositive) {
         this.visitId = visitId;
         this.height = height;
         this.weight = weight;
         this.systolic = systolic;
         this.diastolic = diastolic;
         this.temperature = temperature;
+        this.heartRate = heartRate;
         this.hivPositive = hivPositive;
         this.ptbPositive = ptbPositive;
         this.hepCPositive = hepCPositive;
     }
     
-    public Vitals(int visitId, double height, double weight, double systolic, double diastolic, double temperature) {
+    public Vitals(int visitId, double height, double weight, double systolic, double diastolic, double temperature, double heartRate) {
         this.visitId = visitId;
         this.height = height;
         this.weight = weight;
         this.systolic = systolic;
         this.diastolic = diastolic;
         this.temperature = temperature;
+        this.heartRate = heartRate;
     }
     
     public int getVisitId() {
@@ -54,6 +57,10 @@ public class Vitals {
     
     public double getTemperature() {
         return temperature;
+    }
+    
+    public double getHeartRate() {
+        return heartRate;
     }
     
     public int getHivPositive() {

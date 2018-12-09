@@ -22,10 +22,10 @@ public class VitalsDAO {
     ResultSet rs;
     PreparedStatement stmt;
 
-    public boolean insertData(int visitId, double height, double weight, double systolic, double diastolic, double temperature, int hivPositive, int ptbPositive, int hepCPositive) {
+    public boolean insertData(int visitId, double height, double weight, double systolic, double diastolic, double temperature, double heartRate, int hivPositive, int ptbPositive, int hepCPositive) {
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("INSERT INTO vitals (visit_id, height, weight, systolic, diastolic, temperature, hiv_positive, ptb_positive, hepC_positive) values (?,?,?,?,?,?,?,?,?)");
+            stmt = conn.prepareStatement("INSERT INTO vitals (visit_id, height, weight, systolic, diastolic, temperature, heartRate. hiv_positive, ptb_positive, hepC_positive) values (?,?,?,?,?,?,?,?,?)");
             stmt.setInt(1, visitId);
             stmt.setDouble(2, height);
             stmt.setDouble(3, weight);
@@ -35,6 +35,7 @@ public class VitalsDAO {
             stmt.setDouble(7, hivPositive);
             stmt.setDouble(8, ptbPositive);
             stmt.setDouble(9, hepCPositive);
+            stmt.setDouble(10, heartRate);
             stmt.executeUpdate();
             return true;
         } catch (SQLException e) {
@@ -64,11 +65,12 @@ public class VitalsDAO {
                 double systolic = rs.getDouble("systolic");
                 double diastolic = rs.getDouble("diastolic");
                 double temperature = rs.getDouble("temperature");
+                double heartRate = rs.getDouble("heartRate");
                 int hivPosititive = rs.getInt("hiv_positive");
                 int ptbPosititive = rs.getInt("ptb_positive");
                 int hepCPositive = rs.getInt("hepC_Positive");
 
-                Vitals vitals = new Vitals(visitId, height, weight, systolic, diastolic, temperature, hivPosititive, ptbPosititive, hepCPositive);
+                Vitals vitals = new Vitals(visitId, height, weight, systolic, diastolic, temperature, heartRate, hivPosititive, ptbPosititive, hepCPositive);
                 return vitals;
             }
         } catch (SQLException e) {

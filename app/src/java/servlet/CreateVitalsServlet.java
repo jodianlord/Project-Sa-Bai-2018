@@ -42,6 +42,7 @@ public class CreateVitalsServlet extends HttpServlet {
         double systolic = 0.0;
         double diastolic = 0.0;
         double temperature = 0.0;
+        double heartRate = 0.0;
         int hivPositive = 0;
         int ptbPositive = 0;
         int hepCPositive = 0;
@@ -56,6 +57,7 @@ public class CreateVitalsServlet extends HttpServlet {
         String systolicS = request.getParameter("systolic");
         String diastolicS = request.getParameter("diastolic");
         String temperatureS = request.getParameter("temperature");
+        String heartRateS = request.getParameter("heartRate");
         String hivPositiveS = request.getParameter("hivPositive");
         String ptbPositiveS = request.getParameter("ptbPositive");
         String hepCPositiveS = request.getParameter("hepCPositive");
@@ -136,6 +138,16 @@ public class CreateVitalsServlet extends HttpServlet {
         } else {
             errors.add("Please enter a valid temeperature");
         }
+        
+        if (heartRateS != null && heartRateS.length() != 0) {
+            try {
+                heartRate = Double.parseDouble(heartRateS);
+            } catch (Exception e) {
+                errors.add("Please enter valid heart rate");
+            }
+        } else {
+            errors.add("Please enter a valid heart rate");
+        }
 
         if (hivPositiveS != null) {
             hivPositive = 1;
@@ -150,10 +162,10 @@ public class CreateVitalsServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (errors.isEmpty()) {
-            Vitals vitals = new Vitals(visitId, height, weight, systolic, diastolic, temperature, hivPositive, ptbPositive, hepCPositive);
+            Vitals vitals = new Vitals(visitId, height, weight, systolic, diastolic, temperature, heartRate, hivPositive, ptbPositive, hepCPositive);
             Visit visit = VisitDAO.getVisitByVisitID(visitId);
             visit.setVitals(vitals);
-            boolean successful = vitalsDao.insertData(visitId, height, weight, systolic, diastolic, temperature, hivPositive, ptbPositive, hepCPositive);
+            boolean successful = vitalsDao.insertData(visitId, height, weight, systolic, diastolic, temperature, heartRate, hivPositive, ptbPositive, hepCPositive);
             int update = -1;
             try {
                 update = Integer.parseInt(request.getParameter("update"));

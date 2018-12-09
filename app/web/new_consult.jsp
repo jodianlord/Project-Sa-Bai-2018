@@ -319,6 +319,14 @@
                                             </div>
                                         </div>
 
+                                            <div class="col-md-3">
+                                                <b>Heart Rate: </b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <%=vitalsObject.getHeartRate()%>
+                                            </div>
+                                        </div>
+
                                         <div class="row" style="padding:15px;">
                                             <div class="col-md-3">
                                                 <b>HIV Positive:</b>
@@ -822,13 +830,13 @@
 
 <script>
 //            .summaryProblemGroup
-$(document).ready(function () {
-    var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
-        "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
-        "Oncology", "Psychology", "Renal", "Respiratory", "Urology", "Surgery"];
+                                                    $(document).ready(function () {
+                                                        var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
+                                                            "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
+                                                            "Oncology", "Psychology", "Renal", "Respiratory", "Urology", "Surgery"];
 
 
-});
+                                                    });
 </script>
 
 <%@include file="footer.jsp" %>

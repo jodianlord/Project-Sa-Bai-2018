@@ -298,6 +298,13 @@
                                             <div class="col-md-3">
                                                 <%=vitalsObject.getTemperature()%>
                                             </div>
+                                            
+                                            <div class="col-md-3">
+                                                <b>Heart Rate (bpm): </b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <%=vitalsObject.getHeartRate()%>
+                                            </div>
                                         </div>
 
                                         <div class="row" style="padding:15px;">

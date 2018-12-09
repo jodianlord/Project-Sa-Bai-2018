@@ -165,7 +165,7 @@ public class OrderDAO {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("SELECT o.order_id, visit_id, medicine_name, quantity, notes, remarks FROM orders o INNER JOIN orderlist ol ON o.order_id = ol.order_id WHERE status = 'PENDING';");
             rs = stmt.executeQuery();
-
+            //String Pro
             while (rs.next()) {
                 int orderID = rs.getInt("order_id");
                 int visit_id = rs.getInt("visit_id");
@@ -173,16 +173,18 @@ public class OrderDAO {
                 int quantity = rs.getInt("quantity");
                 String notes = rs.getString("notes");
                 String remarks = rs.getString("remarks");
-                
-                //System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
+                System.out.println("visit_id is " + visit_id);
+                System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
                 
                 orderList.add(new Order(orderID,consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
             }
-            
+            System.out.println("successfully returned");
             return orderList;
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
+        } catch(NullPointerException e){
+            return orderList;
+        }finally {
             ConnectionManager.close(conn, stmt, rs);
         }
         return orderList;

@@ -291,8 +291,17 @@
                                     <div class="form-group">
                                         <label for="name">Temperature (Celsius)</label>
                                         <input type="number" step=0.1 class="form-control" id="name" name="temperature" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getTemperature() : ""%>">
+                                    </div>   
+                                </div>
+                                    
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="name">Heart Rate (bpm)</label>
+                                        <input type="number" step=0.1 class="form-control" id="name" name="heartrate" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getHeartRate() : ""%>">
                                     </div>
                                 </div>
+                                    
+                                    
                             </div>
 
                             <div class="col-md-2">

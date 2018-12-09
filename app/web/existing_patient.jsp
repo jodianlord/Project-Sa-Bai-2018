@@ -322,6 +322,9 @@
                                         <td>
                                             <%=v == null ? "NA" : v.getTemperature()%>
                                         </td>
+                                         <td>
+                                            <%=v == null ? "NA" : v.getHeartRate()%>
+                                        </td>
                                     </tr>
                                     <%
                                         }
