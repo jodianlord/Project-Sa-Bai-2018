@@ -16,7 +16,8 @@ import model.Order;
  *
  * @author Kwtam
  */
-public class OrderDAO { 
+public class OrderDAO {
+
     public static void updateInventory(String pVillage, int pNo) {
         Connection conn = null;
         ResultSet rs = null;
@@ -55,18 +56,18 @@ public class OrderDAO {
         }
 //        return null;
     }
-    
+
     public static boolean placeOrder(int visitID) {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("INSERT INTO orders values(NULL,?,'PENDING')");
             stmt.setInt(1, visitID);
             stmt.executeUpdate();
-            
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -75,15 +76,15 @@ public class OrderDAO {
         }
         return false;
     }
-    
+
     public static boolean addOrders(int orderID, Order order) {
         Connection conn = null;
         ResultSet rs = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = ConnectionManager.getConnection();
-            
+
             stmt = conn.prepareStatement("INSERT INTO orderlist values(?,?,?,?,?)");
             stmt.setInt(1, orderID);
             stmt.setString(2, order.getMedicine());
@@ -100,25 +101,24 @@ public class OrderDAO {
         return false;
     }
 
-    
-    public static void removeOrder(int orderID){
+    public static void removeOrder(int orderID) {
         Connection conn = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("delete from orders where order_id = ?");
             stmt.setInt(1, orderID);
             stmt.executeUpdate();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
-    public static void updateOrder(int orderID, int newQuantity, String medicine){
+
+    public static void updateOrder(int orderID, int newQuantity, String medicine) {
         Connection conn = null;
         PreparedStatement stmt = null;
-        
+
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("update orderlist set quantity = ? where order_id = ? and medicine_name = ?");
@@ -126,12 +126,12 @@ public class OrderDAO {
             stmt.setInt(2, orderID);
             stmt.setString(3, medicine);
             stmt.executeUpdate();
-        } catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    
-    public static int getNextOrderID(){
+
+    public static int getNextOrderID() {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -152,8 +152,8 @@ public class OrderDAO {
         System.out.println("Returning 0");
         return 0;
     }
-    
-    public static ArrayList<Order> getOrders(){
+
+    public static ArrayList<Order> getOrders() {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -167,18 +167,26 @@ public class OrderDAO {
             rs = stmt.executeQuery();
 
             while (rs.next()) {
-                int orderID = rs.getInt("order_id");
-                int visit_id = rs.getInt("visit_id");
-                String medicine_name = rs.getString("medicine_name");
-                int quantity = rs.getInt("quantity");
-                String notes = rs.getString("notes");
-                String remarks = rs.getString("remarks");
-                
-                //System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
-                
-                orderList.add(new Order(orderID,consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
+                int problemID = 0;
+                try {
+                    int orderID = rs.getInt("order_id");
+                    problemID = orderID;
+                    int visit_id = rs.getInt("visit_id");
+                    String medicine_name = rs.getString("medicine_name");
+                    int quantity = rs.getInt("quantity");
+                    String notes = rs.getString("notes");
+                    String remarks = rs.getString("remarks");
+
+                    //System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
+                    orderList.add(new Order(orderID, consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
+
+                } catch (NullPointerException e) {
+                    System.out.println("problem order ID: "  + problemID);
+                    continue;
+                }
+
             }
-            
+
             return orderList;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -187,8 +195,8 @@ public class OrderDAO {
         }
         return orderList;
     }
-    
-    public static ArrayList<Order> getOrdersByOrderID(int orderID){
+
+    public static ArrayList<Order> getOrdersByOrderID(int orderID) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -209,11 +217,10 @@ public class OrderDAO {
                 int quantity = rs.getInt("quantity");
                 String notes = rs.getString("notes");
                 String remarks = rs.getString("remarks");
-                
-                
-                orderList.add(new Order(orderID, consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId() , medicine_name, quantity, notes, remarks));
+
+                orderList.add(new Order(orderID, consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
             }
-            
+
             return orderList;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -222,8 +229,8 @@ public class OrderDAO {
         }
         return orderList;
     }
-    
-    public static int getOrderIdByPatientId(int patientId){
+
+    public static int getOrderIdByPatientId(int patientId) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;

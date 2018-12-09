@@ -39,14 +39,14 @@ public class DBTools {
     PreparedStatement pstmt = null;
 
     public static void main(String[] args) {
-        File dir = new File("C:\\Users\\jodia\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
+        File dir = new File("C:\\Users\\Jordy\\Desktop\\Sabaiphotos\\9122018");
         File[] directoryListing = dir.listFiles();
         //generateEncodings(directoryListing);
-        //getFiles("/home/jordy/Desktop/test/");
+        //getFiles("C:\\Users\\Jordy\\Desktop\\Sabaiphotos\\9122018\\");
         //changeToJPEG(directoryListing, "C:\\Users\\jodia\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
-        //uploadDB(directoryListing);
+        uploadDB(directoryListing);
         //unfuckInventory();
-        deleteMedicine("Order Testing");
+        //deleteMedicine("Order Testing");
     }
 
     public static void changeToJPEG(File[] fileArr, String directory) {

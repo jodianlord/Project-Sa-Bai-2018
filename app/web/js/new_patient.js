@@ -111,7 +111,14 @@ function createPatientRecord() {
             },
             success: function (msg) {
                 console.log(msg);
-                if (msg.status === "null") {
+                if(msg.fr === "frfail"){
+                    console.log("comes here");
+                    $("#alertPanel>div").css("display", "block").addClass("alert-warning").removeClass("alert-success");
+                    $("#alertPanel>div>h4").html("Facial recognition failed, please take the picture again");   
+                    $("#fg_box").addClass("box-danger").removeClass("box-info").removeClass("box-success");
+                    $("#fg1_tab").removeClass("bg-green");
+                    $("#fg2_tab").removeClass("bg-green");
+                } else if (msg.status === "null") {
                     $("#alertPanel>div").css("display", "block").addClass("alert-warning").removeClass("alert-success");
                     $("#alertPanel>div>h4").html("Fingerprint recording failed, please scan fingerprint again");   
                     $("#fg_box").addClass("box-danger").removeClass("box-info").removeClass("box-success");
@@ -220,13 +227,20 @@ function createPatientRecord2() {
             },
             success: function (msg) {
                 console.log(msg);
-                if (msg.status === "null") {
+                if(msg.fr === "frfail"){
+                    console.log("comes here");
+                    $("#alertPanel>div").css("display", "block").addClass("alert-warning").removeClass("alert-success");
+                    $("#alertPanel>div>h4").html("Facial recognition failed, please take the picture again");   
+                    $("#fg_box").addClass("box-danger").removeClass("box-info").removeClass("box-success");
+                    $("#fg1_tab").removeClass("bg-green");
+                    $("#fg2_tab").removeClass("bg-green");
+                } else if (msg.status === "null") {
                     $("#alertPanel>div").css("display", "block").addClass("alert-warning").removeClass("alert-success");
                     $("#alertPanel>div>h4").html("Fingerprint recording failed, please scan fingerprint again");   
                     $("#fg_box").addClass("box-danger").removeClass("box-info").removeClass("box-success");
                     $("#fg1_tab").removeClass("bg-green");
                     $("#fg2_tab").removeClass("bg-green");
-                } else {
+                }else {
                     $("#alertPanel>div").css("display", "block").addClass("alert-success").removeClass("alert-warning");
                     $("#alertPanel>div>h4").html("You have successfully created a new patient record");
 //                $("#alertPanel>div").append('<a href="existing_patient.jsp" class="btn btn-lg pull-right" style="background:#763d3c;text-decoration:none;border: 1px solid #763d3c;box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);}">Back to Main Page</a>');
