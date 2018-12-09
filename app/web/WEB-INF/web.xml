@@ -103,6 +103,10 @@
         <servlet-name>AutocompleteServlet</servlet-name>
         <servlet-class>servlet.AutocompleteServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CreateVisitDoctorServlet</servlet-name>
+        <servlet-class>servlet.CreateVisitDoctorServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>InitializeBioMiniServlet</servlet-name>
         <url-pattern>/InitializeBioMiniServlet</url-pattern>
@@ -202,6 +206,10 @@
     <servlet-mapping>
         <servlet-name>AutocompleteServlet</servlet-name>
         <url-pattern>/AutocompleteServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CreateVisitDoctorServlet</servlet-name>
+        <url-pattern>/CreateVisitDoctorServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

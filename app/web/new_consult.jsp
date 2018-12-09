@@ -382,6 +382,14 @@
                         <%
                             if (pastVisits != null) {
                         %>
+                        <div class="box-tools pull-right">
+                            <form action="CreateVisitDoctorServlet" method="POST" id="createVisitForm">
+                                <input type="hidden" name="patientId" value=<%=patientRecord.getPatientId()%> />
+                                <button type="submit" class="btn btn-box-tool" data-toggle="tooltip" title="Add New Visit" data-widget="chat-pane-toggle" style="color: black; font-size: 1em;">
+                                    <i class="fa fa-plus-circle"></i> Start New Visit
+                                </button>
+                            </form>
+                        </div>
                         <table class="table" >
                             <tbody>
                                 <tr>
@@ -822,13 +830,13 @@
 
 <script>
 //            .summaryProblemGroup
-$(document).ready(function () {
-    var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
-        "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
-        "Oncology", "Psychology", "Renal", "Respiratory", "Urology", "Surgery"];
+                                                    $(document).ready(function () {
+                                                        var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
+                                                            "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
+                                                            "Oncology", "Psychology", "Renal", "Respiratory", "Urology", "Surgery"];
 
 
-});
+                                                    });
 </script>
 
 <%@include file="footer.jsp" %>
