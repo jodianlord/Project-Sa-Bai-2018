@@ -38,7 +38,7 @@ public class CompareFaces implements Callable<Patient> {
     public Patient call() {
         HttpURLConnection con;
         try {
-            URL myurl = new URL("http://192.168.1.3:5000/compareimages");
+            URL myurl = new URL(RESTHandler.facialURL);
 
             for (Patient p : patientList) {
                 con = (HttpURLConnection) myurl.openConnection();
@@ -49,7 +49,7 @@ public class CompareFaces implements Callable<Patient> {
                 if (faceJSON != null) {
                     compareImages.put("second_encoding", faceJSON.get("encoding"));
                     try {
-                        String url = "http://192.168.1.3:5000/compareimages";
+                        String url = RESTHandler.facialURL;
                         byte[] postData = compareImages.toString().getBytes(StandardCharsets.UTF_8);
 
                         try (DataOutputStream wr = new DataOutputStream(con.getOutputStream())) {

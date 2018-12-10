@@ -56,7 +56,9 @@ public class SearchPatientLatestVisitServlet extends HttpServlet {
 
         if (patientIdInput == null) {
             session.setAttribute("visitError", "Patient/Visit not found!");
-            if (source.equals("consult")) {
+            if(source == null){
+                response.sendRedirect("index.jsp");
+            }else if (source.equals("consult")) {
                 response.sendRedirect("new_consult.jsp");
             } else if (source.equals("postreferral")) {
                 response.sendRedirect("new_postreferral.jsp");

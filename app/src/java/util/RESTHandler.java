@@ -33,7 +33,7 @@ public class RESTHandler {
     private static HttpURLConnection con;
     private static final String PROPS_FILENAME = "dreamfactory.properties";
     private static String apiKey;
-    public static String facialURL = "http://192.168.1.3:5000/";
+    public static String facialURL = "http://127.0.0.1:5000/";
 
     public static String sendDeleteRequest(String requestURL) {
         return null;

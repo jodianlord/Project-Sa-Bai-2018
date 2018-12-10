@@ -108,13 +108,16 @@ public class CreatePatientServlet extends HttpServlet {
                 ex.printStackTrace();
             } catch(ConnectException e){
                 e.printStackTrace();
-                nullFingerprintJsonObject.addProperty("fr", "frfail");
-                out.print(gs.toJson(nullFingerprintJsonObject));
-                out.close();
-                return;
+                //nullFingerprintJsonObject.addProperty("fr", "frfail");
+                //out.print(gs.toJson(nullFingerprintJsonObject));
+                //out.close();
+                //return;
+                verificationEncoding = new JSONObject();
             }catch(SocketTimeoutException e){
                 e.printStackTrace();
                 nullFingerprintJsonObject.addProperty("fr", "frfail");
+            }catch(IOException e){
+                verificationEncoding = new JSONObject();
             }
 
             

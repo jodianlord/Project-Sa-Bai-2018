@@ -845,7 +845,7 @@
             data: {
                 patientId: $("#patientIDVisit").val()
             },
-            success: function(resp){
+             success: function(resp){
                 window.location.href = window.location.href;
             },error: function(xhr){
                 alert("Invalid action!");
