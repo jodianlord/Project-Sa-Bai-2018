@@ -24,7 +24,7 @@ def getEncoding():
         jObj['encoding'] = camera_image_encoding.tolist()
     else:
         jObj['encoding'] = []
-    print(jObj)
+    # print(jObj)
 
     response = app.response_class(
         response=json.dumps(jObj),
@@ -41,7 +41,7 @@ def compareimages():
     second_encoding = np.array(data['second_encoding'])
     try:
         results = face_recognition.compare_faces(
-            [first_encoding], second_encoding, tolerance=0.4)
+            [first_encoding], second_encoding, tolerance=0.3)
     except TypeError:
         results = "false"
     # print(results[0])

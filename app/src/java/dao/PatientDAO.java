@@ -172,6 +172,7 @@ public class PatientDAO {
 
             if (imageFile != null) {
                 pstmt = conn.prepareStatement("UPDATE patient_pictures SET picture_blob = ? WHERE patient_id = ?");
+                //System.out.println("image file: " + Files.readAllBytes(imageFile.toPath()));
                 pstmt.setBinaryStream(1, new FileInputStream(imageFile));
                 pstmt.setInt(2, patientId);
                 pstmt.executeUpdate();
@@ -180,8 +181,13 @@ public class PatientDAO {
             //Catches any possible SQL exception
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return false;
+        } catch(IOException e){
+            e.printStackTrace();
+            return false;
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }

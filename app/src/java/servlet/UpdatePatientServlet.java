@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ConnectException;
+import java.nio.file.Files;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,6 +53,8 @@ public class UpdatePatientServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        File toEncodeFile;
+        boolean updateSuccessful = false;
         try (PrintWriter out = response.getWriter()) {
             HttpSession session = request.getSession();
             boolean patientCorrect = false;
@@ -68,6 +71,7 @@ public class UpdatePatientServlet extends HttpServlet {
 
             String imageString = village + patientId + ".png";
 
+            /*
             System.out.println(village);
             System.out.println(patientId);
             System.out.println(name);
@@ -76,7 +80,7 @@ public class UpdatePatientServlet extends HttpServlet {
             System.out.println(travellingTimeToClinic);
             System.out.println(photoImage);
             System.out.println(imageString);
-
+             */
             if (!photoImage.equals("default")) {
 
                 byte[] photoImageByte = Base64.getDecoder().decode(photoImage.replace("data:image/jpeg;base64,", ""));
@@ -87,46 +91,45 @@ public class UpdatePatientServlet extends HttpServlet {
                 System.out.println("user.dir = " + System.getProperty("user.dir"));
 
             }
-            File toEncodeFile = null;
+            toEncodeFile = null;
             JSONObject verificationEncoding = null;
             System.out.println("image: " + photoImage);
             if (photoImage != null && photoImage.length() != 0 && !photoImage.equals("default")) {
-                
+
                 //get facial encodings
                 //ServletContext servletContext = this.getServletConfig().getServletContext();
                 BufferedImage toEncode = decodeToImage(photoImage.substring(photoImage.indexOf(',') + 1, photoImage.length()));
                 //File toEncodeFile = new File("image.jpeg");
                 toEncodeFile = File.createTempFile("image", ".jpeg");
-                toEncodeFile.deleteOnExit();
+                //toEncodeFile.deleteOnExit();
                 ImageIO.write(toEncode, "jpeg", toEncodeFile);
                 Map<String, File> dataMap = new HashMap<String, File>();
                 dataMap.put("image", toEncodeFile);
+                //System.out.println("image file: " + Files.readAllBytes(toEncodeFile.toPath()));
                 try {
                     String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
                     if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
                         verificationEncoding = getJSONObject(verificationEncodingString);
-                        System.out.println(verificationEncoding.toString());
+                        //System.out.println(verificationEncoding.toString());
                     } else {
                         verificationEncoding = null;
                     }
+                    String verEncodeStr = null;
+                    if (verificationEncoding != null) {
+                        verEncodeStr = verificationEncoding.toString();
+                    }
 
+                    updateSuccessful = PatientDAO.updatePatientDetails(patientId, village, name, imageString, contactNo, Integer.parseInt(travellingTimeToClinic), dateOfBirth, allergies, toEncodeFile, verEncodeStr);
+                    toEncodeFile.delete();
                 } catch (ParseException ex) {
                     Logger.getLogger(CreatePatientServlet.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (NullPointerException ex) {
                     ex.printStackTrace();
-                } catch(ConnectException e){
+                } catch (ConnectException e) {
                     e.printStackTrace();
                 }
-                
-                
+
             }
-            
-            String verEncodeStr = null;
-            if(verificationEncoding != null){
-                verEncodeStr = verificationEncoding.toString();
-            }
-            
-            boolean updateSuccessful = PatientDAO.updatePatientDetails(patientId, village, name, imageString, contactNo, Integer.parseInt(travellingTimeToClinic), dateOfBirth, allergies, toEncodeFile, verEncodeStr);
 
             if (updateSuccessful) {
                 System.out.println("successfully update patient details");
