@@ -39,8 +39,8 @@ public class CreateVitalsServlet extends HttpServlet {
         int visitId = 0;
         double height = 0.0;
         double weight = 0.0;
-        double systolic = 0.0;
-        double diastolic = 0.0;
+        int systolic = 0;
+        int diastolic = 0;
         double temperature = 0.0;
         int hivPositive = 0;
         int ptbPositive = 0;
@@ -59,6 +59,13 @@ public class CreateVitalsServlet extends HttpServlet {
         String hivPositiveS = request.getParameter("hivPositive");
         String ptbPositiveS = request.getParameter("ptbPositive");
         String hepCPositiveS = request.getParameter("hepCPositive");
+        String heartRateS = request.getParameter("heartRate");
+        int heartRate;
+        try{
+            heartRate = Integer.parseInt(heartRateS);
+        }catch(NumberFormatException e){
+            heartRate = 0;
+        }
 
 //        try (PrintWriter out = response.getWriter()) {
 //            out.println(visitID);
@@ -150,10 +157,10 @@ public class CreateVitalsServlet extends HttpServlet {
         HttpSession session = request.getSession();
 
         if (errors.isEmpty()) {
-            Vitals vitals = new Vitals(visitId, height, weight, systolic, diastolic, temperature, hivPositive, ptbPositive, hepCPositive);
+            Vitals vitals = new Vitals(visitId, height, weight, systolic, diastolic, temperature, hivPositive, ptbPositive, hepCPositive, heartRate);
             Visit visit = VisitDAO.getVisitByVisitID(visitId);
             visit.setVitals(vitals);
-            boolean successful = vitalsDao.insertData(visitId, height, weight, systolic, diastolic, temperature, hivPositive, ptbPositive, hepCPositive);
+            boolean successful = vitalsDao.insertData(visitId, height, weight, systolic, diastolic, temperature, hivPositive, ptbPositive, hepCPositive, heartRate);
             int update = -1;
             try {
                 update = Integer.parseInt(request.getParameter("update"));

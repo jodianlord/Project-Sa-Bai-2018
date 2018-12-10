@@ -185,9 +185,6 @@ public class PatientDAO {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return false;
-        } catch(IOException e){
-            e.printStackTrace();
-            return false;
         } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }

@@ -286,6 +286,13 @@
                                         <input type="number" class="form-control" id="name" name="diastolic" value="<%=visitRecord != null && visitRecord.getVitals() != null ? (int) visitRecord.getVitals().getDiastolic() : "0"%>" style="width: 44%; display:inline">
                                     </div>
                                 </div>
+                                    
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="name">Heart Rate</label>
+                                        <input type="number" step=0.1 class="form-control" id="name" name="heartRate" value="<%=visitRecord != null && visitRecord.getVitals() != null ? visitRecord.getVitals().getHeartRate() : ""%>">
+                                    </div>
+                                </div>
 
                                 <div class="col-md-3">
                                     <div class="form-group">

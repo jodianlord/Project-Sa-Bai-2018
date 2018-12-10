@@ -293,14 +293,14 @@
                                                 <b>Height:</b>
                                             </div>
                                             <div class="col-md-3">
-                                                <%=vitalsObject.getHeight()%>
+                                                <%=vitalsObject.getHeight()%> cm
                                             </div>
 
                                             <div class="col-md-3">
                                                 <b>Weight:</b>
                                             </div>
                                             <div class="col-md-3">
-                                                <%=vitalsObject.getWeight()%>
+                                                <%=vitalsObject.getWeight()%> kg
                                             </div>
                                         </div>
                                         <div class="row" style="padding:15px;">
@@ -308,14 +308,23 @@
                                                 <b>BP:</b>
                                             </div>
                                             <div class="col-md-3">
-                                                <%=vitalsObject.getSystolic()%>/<%=vitalsObject.getDiastolic()%>
+                                                <%=vitalsObject.getSystolic()%>/<%=vitalsObject.getDiastolic()%> mmHg
                                             </div>
 
+                                            <div class="col-md-3">
+                                                <b>Heart Rate:</b>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <%=vitalsObject.getHeartRate()%> BPM
+                                            </div>
+                                        </div>
+
+                                        <div class="row" style="padding:15px;">
                                             <div class="col-md-3">
                                                 <b>Temp:</b>
                                             </div>
                                             <div class="col-md-3">
-                                                <%=vitalsObject.getTemperature()%>
+                                                <%=vitalsObject.getTemperature()%> C
                                             </div>
                                         </div>
 
@@ -845,9 +854,9 @@
             data: {
                 patientId: $("#patientIDVisit").val()
             },
-             success: function(resp){
+            success: function (resp) {
                 window.location.href = window.location.href;
-            },error: function(xhr){
+            }, error: function (xhr) {
                 alert("Invalid action!");
             }
         })
