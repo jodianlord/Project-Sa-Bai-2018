@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import model.Patient;
 import model.Visit;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -77,7 +78,10 @@ public class SearchPatientFaceServlet extends HttpServlet {
             String verificationEncodingString = RESTHandler.sendMultipartPost(RESTHandler.facialURL + "getencoding", dataMap);
             if (verificationEncodingString != null && verificationEncodingString.length() > 0) {
                 verificationEncoding = getJSONObject(verificationEncodingString);
-                System.out.println(verificationEncoding.toString());
+                JSONArray encodingArray = (JSONArray) verificationEncoding.get("encoding");
+                if(encodingArray.isEmpty()){
+                    verificationEncoding = null;
+                }
             } else {
                 verificationEncoding = null;
             }

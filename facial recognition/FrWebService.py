@@ -14,10 +14,17 @@ app = Flask(__name__)
 def getEncoding():
     data = request.files['image']
     camImage = face_recognition.load_image_file(data)
-    camera_image_encoding = face_recognition.face_encodings(camImage)[0]
+    try:
+        camera_image_encoding = face_recognition.face_encodings(camImage)[0]
+    except IndexError:
+        camera_image_encoding = None
 
     jObj = {}
-    jObj['encoding'] = camera_image_encoding.tolist()
+    if camera_image_encoding is not None:
+        jObj['encoding'] = camera_image_encoding.tolist()
+    else:
+        jObj['encoding'] = []
+    print(jObj)
 
     response = app.response_class(
         response=json.dumps(jObj),
@@ -32,9 +39,12 @@ def compareimages():
     data = request.get_json(force=True)
     first_encoding = np.array(data['first_encoding'])
     second_encoding = np.array(data['second_encoding'])
-    results = face_recognition.compare_faces(
-        [first_encoding], second_encoding, tolerance=0.4)
-    print(results[0])
+    try:
+        results = face_recognition.compare_faces(
+            [first_encoding], second_encoding, tolerance=0.4)
+    except TypeError:
+        results = "false"
+    # print(results[0])
 
     rObj = {'match': str(results[0]).lower()}
     #data_json = json.dumps(rObj)

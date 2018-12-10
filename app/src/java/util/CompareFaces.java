@@ -38,7 +38,7 @@ public class CompareFaces implements Callable<Patient> {
     public Patient call() {
         HttpURLConnection con;
         try {
-            URL myurl = new URL(RESTHandler.facialURL);
+            URL myurl = new URL(RESTHandler.facialURL + "compareimages");
 
             for (Patient p : patientList) {
                 con = (HttpURLConnection) myurl.openConnection();
