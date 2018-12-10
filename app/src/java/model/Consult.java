@@ -14,17 +14,19 @@ public class Consult {
     private String blood_glucose;
     private String referrals;
     private boolean chronic_referral;
+    private String addendum = null;
 
-    public Consult(int consult_id, int visitId, String date, String doctor, String notes, String diagnosis, String problems) {
+    public Consult(int consult_id, int visitId, String date, String doctor, String notes, String diagnosis, String problems, String addendum) {
         this(visitId, doctor);
         this.date = date;
         this.notes = notes;
         this.diagnosis = diagnosis;
         this.problems = problems;
         this.consult_id = consult_id;
+        this.addendum = addendum;
     }
 
-    public Consult(int consult_id, int visitId, String date, String doctor, String notes, String diagnosis, String problems, String urine_test, String hemocue_count, String blood_glucose, String referrals, boolean chronic_referral) {
+    public Consult(int consult_id, int visitId, String date, String doctor, String notes, String diagnosis, String problems, String urine_test, String hemocue_count, String blood_glucose, String referrals, boolean chronic_referral, String addendum) {
         this(visitId, doctor);
         this.consult_id = consult_id;
         this.date = date;
@@ -36,9 +38,10 @@ public class Consult {
         this.blood_glucose = blood_glucose;
         this.referrals = referrals;
         this.chronic_referral = chronic_referral;
+        this.addendum = addendum;
     }
 
-    public Consult(int visitId, String date, String doctor, String notes, String diagnosis, String problems, String urine_test, String hemocue_count, String blood_glucose, String referrals, boolean chronic_referral) {
+    public Consult(int visitId, String date, String doctor, String notes, String diagnosis, String problems, String urine_test, String hemocue_count, String blood_glucose, String referrals, boolean chronic_referral, String addendum) {
         this(visitId, doctor);
         this.date = date;
         this.notes = notes;
@@ -49,6 +52,7 @@ public class Consult {
         this.blood_glucose = blood_glucose;
         this.referrals = referrals;
         this.chronic_referral = chronic_referral;
+        this.addendum = addendum;
     }
 
     public Consult(int visitId, String doctor) {
@@ -83,7 +87,11 @@ public class Consult {
     public int getConsult_id() {
         return consult_id;
     }
-
+    
+    public String getAddendum(){
+        return addendum;
+    }
+    
     public void setConsult_id(int consult_id) {
         this.consult_id = consult_id;
     }
@@ -151,5 +159,9 @@ public class Consult {
 
     public void setChronic_referral(boolean chronic_referral) {
         this.chronic_referral = chronic_referral;
+    }
+    
+    public void setAddendum(String addendum){
+        this.addendum = addendum;
     }
 }

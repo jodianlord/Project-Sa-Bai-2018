@@ -142,11 +142,18 @@
             Visit[] pastVisits = null;
 
             String consultDisplayState = "none";
+            String addendum = "";
             if (visitRecord != null) {
                 System.out.println(visitRecord.getId());
 
                 consultDisplayState = consultDAO.getConsultByVisitID(visitRecord.getId()) == null || viewPastConsultRecord ? "block" : "none";
-
+                if (consultDAO.getConsultByVisitID(visitRecord.getId()) != null) {
+                    Consult con = consultDAO.getConsultByVisitID(visitRecord.getId());
+                    addendum = con.getAddendum();
+                    if (addendum == null) {
+                        addendum = "";
+                    }
+                }
                 //visitRecord = VisitDAO.getPatientLatestVisit(visitRecord.getPatientId());
                 vitalsObject = visitRecord.getVitals();
                 pastVisits = VisitDAO.getVisitByPatientID(visitRecord.getPatientId());
@@ -735,7 +742,7 @@
                                                 }
                                             } else if (visitRecord != null) {
                                                 String selectTag = "<select name='medicine' class='form-control medicine' id='medicines'>";
-                                                String quantityInputTag = "<input name='quantity' placeholder='Quantity' class='form-control quantity' type='number'>";
+                                                String quantityInputTag = "<input name='quantity' placeholder='Quantity' min='1' class='form-control quantity' type='number' required>";
                                                 String notesInputTag = "<input name='notes' placeholder='Regimen' class='form-control notes' type='text'>";
                                                 String remarksInputTag = "<input name='remarks' placeholder='Remarks' class='form-control remarks' type='text'>";
 
@@ -782,9 +789,37 @@
                                         %>
 
 
+                                    </div>    
+                                </div>
+
+                                <% if (viewPastConsultRecord && visitRecord != null && visitRecord.getConsult() != null) {
+                                %>
+
+                                <div class="col-md-12" style="padding:0">
+                                    <div class="form-group">
+                                        <label>Addendum</label>
+
+                                        <%
+                                            if (visitRecord.getConsult().getDoctor().equals(doctorName)) {
+                                        %>
+                                        <textarea class="form-control" name="addendum" id="addendumDetails" rows="3" placeholder="Leave blank if NA..." style="height:200px"><%=addendum%></textarea>
+                                        <br>
+                                        <button type="button" class="btn btn-info btn-flat" id="addaddendum" >Add Addendum</button>
+                                        <%
+                                        } else {
+                                        %>
+                                        <textarea class="form-control" name="addendum" id="addendumDetails" rows="3" placeholder="No addendum added" style="height:200px" onblur="saveTextBoxDetails()" disabled><%=addendum%></textarea>
+                                        <%
+                                            }
+                                        %>
                                     </div>
 
                                 </div>
+
+                                <%
+                                    }
+                                %>
+
                                 <%
                                     if (!viewPastConsultRecord && visitRecord != null) {
                                 %>
@@ -836,13 +871,13 @@
 
 
 <script>
-                                                    $(document).ready(function () {
-                                                        var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
-                                                            "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
-                                                            "Oncology", "Psychology", "Renal", "Respiratory", "Urology", "Surgery"];
+                                            $(document).ready(function () {
+                                                var problems = ["Cardiovascular", "Dental", "Dermatology", "Endocrine", "ENT", "Eye",
+                                                    "Gastrointestinal", "Gynaecology", "Hematology", "Infectious Diseases", "Musculo-skeletal", "Neurology",
+                                                    "Oncology", "Psychology", "Renal", "Respiratory", "Urology", "Surgery"];
 
 
-                                                    });
+                                            });
 
 </script>
 <script>
@@ -860,6 +895,34 @@
                 alert("Invalid action!");
             }
         })
+    });
+</script>
+
+<script>
+    $("#addaddendum").click(function () {
+        var toAdd = $("#addendumDetails").val();
+        var visitID = <%
+            if (visitRecord != null) {
+                out.print(visitRecord.getId());
+            } else {
+                out.print(0);
+            }
+    %>
+
+        $.ajax({
+            url: "./InsertAddendumServlet",
+            type: "POST",
+            data: {
+                visitID: visitID,
+                addendum: toAdd
+            },
+            success: function (resp) {
+                alert("Addendum added successfully!");
+                window.location.href = window.location.href
+            }, error: function (xhr) {
+                alert("Addendum failed!");
+            }
+        });
     });
 </script>
 

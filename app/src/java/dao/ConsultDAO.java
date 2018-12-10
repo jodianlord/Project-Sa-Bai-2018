@@ -25,11 +25,11 @@ public class ConsultDAO {
     ResultSet rs;
     PreparedStatement stmt;
     
-    public boolean insertData(int visitId, String doctor, String notes, String diagnosis, String problems, String urine_test, String hemocue_count, String blood_glucose, String referrals, boolean chronic_referral){
+    public boolean insertData(int visitId, String doctor, String notes, String diagnosis, String problems, String urine_test, String hemocue_count, String blood_glucose, String referrals, boolean chronic_referral, String addendum){
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("INSERT INTO consults(visit_id, date, doctor, notes, diagnosis, problems, urine_test, "
-                    + "hemocue_count, blood_glucose, referrals, chronic_referral) values(?,?,?,?,?,?,?,?,?,?,?)");
+                    + "hemocue_count, blood_glucose, referrals, chronic_referral, addendum) values(?,?,?,?,?,?,?,?,?,?,?,?)");
             
             Date d = new Date();            
             
@@ -44,6 +44,7 @@ public class ConsultDAO {
             stmt.setString(9, blood_glucose);
             stmt.setString(10, referrals);
             stmt.setBoolean(11, chronic_referral);
+            stmt.setString(12, addendum);
             stmt.executeUpdate();
             
             return true;
@@ -86,6 +87,20 @@ public class ConsultDAO {
         return false;
     }
     
+    public boolean setAddendum(int visitId, String addendum){
+        try{
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("UPDATE consults SET addendum = ? WHERE visit_id = ?");
+            stmt.setString(1, addendum);
+            stmt.setInt(2, visitId);
+            stmt.executeUpdate();
+            return true;
+        }catch(SQLException e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     public static Consult getConsultByVisitID(int visitId) {
         Connection conn = null;
         PreparedStatement stmt = null;
@@ -109,8 +124,9 @@ public class ConsultDAO {
                 String blood_glucose = rs.getString("blood_glucose");
                 String referrals = rs.getString("referrals");
                 boolean chronic_referral = rs.getBoolean("chronic_referral");
+                String addendum = rs.getString("addendum");
                 
-                return new Consult(consultId, visitId, date, doctor, notes, diagnosis, problems, urine_test, hemocue_count, blood_glucose, referrals, chronic_referral);
+                return new Consult(consultId, visitId, date, doctor, notes, diagnosis, problems, urine_test, hemocue_count, blood_glucose, referrals, chronic_referral, addendum);
             }
 
         } catch (SQLException e) {
