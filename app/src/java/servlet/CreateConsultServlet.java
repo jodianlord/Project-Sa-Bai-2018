@@ -105,7 +105,7 @@ public class CreateConsultServlet extends HttpServlet {
                     cRef = true;
                 }
 
-                consult = new Consult(visitId, new Date().toString(), doctor, consultDetails, diagnosis, finalStringProblems, urine, hemocue, blood, referrals, cRef);
+                consult = new Consult(visitId, new Date().toString(), doctor, consultDetails, diagnosis, finalStringProblems, urine, hemocue, blood, referrals, cRef, "");
 
                 VisitDAO visitDAO = new VisitDAO();
                 Visit visit = visitDAO.getVisitByVisitID(visitId);
@@ -122,7 +122,7 @@ public class CreateConsultServlet extends HttpServlet {
                     System.out.println("Successfully Ordered Medicines");
                 }
 
-                successful = consultDAO.insertData(visitId, doctor, consultDetails, diagnosis, finalStringProblems, urine, hemocue, blood, referrals, cRef);
+                successful = consultDAO.insertData(visitId, doctor, consultDetails, diagnosis, finalStringProblems, urine, hemocue, blood, referrals, cRef, "");
 
                 if (successful) {
                     System.out.println("New Consult Record Added");
