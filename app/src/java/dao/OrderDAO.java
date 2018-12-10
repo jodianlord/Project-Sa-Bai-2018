@@ -252,7 +252,7 @@ public class OrderDAO {
 
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("select order_id from orders where visit_id = (SELECT id FROM `visits` WHERE `patient_id` = ? order by id desc limit 1)");
+            stmt = conn.prepareStatement("select order_id from orders where visit_id = (SELECT id FROM `visits` WHERE `patient_id` = ? order by id desc limit 1) and status = 'PENDING'");
             stmt.setInt(1, patientId);
             rs = stmt.executeQuery();
 
