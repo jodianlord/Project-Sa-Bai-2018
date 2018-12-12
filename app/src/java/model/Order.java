@@ -19,6 +19,8 @@ public class Order {
     private int quantity;
     private String notes;
     private String remarks;
+    private String date;
+    private String status;
 
     public Order(int orderID, String doctor, int patientID, String medicine, int quantity, String notes, String remarks) {
         this.orderID = orderID;
@@ -28,6 +30,18 @@ public class Order {
         this.quantity = quantity;
         this.notes = notes;
         this.remarks = remarks;
+    }
+    
+    public Order(int orderID, String doctor, int patientID, String medicine, int quantity, String notes, String remarks, String date, String status) {
+        this.orderID = orderID;
+        this.doctor = doctor;
+        this.patientID = patientID;
+        this.medicine = medicine;
+        this.quantity = quantity;
+        this.notes = notes;
+        this.remarks = remarks;
+        this.date = date;
+        this.status = status;
     }
 
     public int getOrderID() {
@@ -57,6 +71,10 @@ public class Order {
     public String getMedicine() {
         return medicine;
     }
+    
+    public String getStatus(){
+        return status;
+    }
 
     public void setMedicine(String medicine) {
         this.medicine = medicine;
@@ -64,6 +82,10 @@ public class Order {
 
     public int getQuantity() {
         return quantity;
+    }
+    
+    public String getDate(){
+        return date;
     }
 
     public void setQuantity(int quantity) {

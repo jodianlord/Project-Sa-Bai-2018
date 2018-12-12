@@ -117,6 +117,25 @@ function onReject(orderID) {
     });
 };
 
+function onRejectPrevApproved(orderID) {
+    jQuery.ajax({
+        type: "POST",
+        url: "ApproveOrderServlet",
+        data: {
+            orderID: orderID,
+            reject: "reject",
+            prev: "approved"
+        },
+        success: function (msg) {
+            location.reload();
+
+        },
+        error: function (request, status, error) {
+
+        }
+    });
+};
+
 function onHide(orderID) {
     jQuery.ajax({
         type: "POST",

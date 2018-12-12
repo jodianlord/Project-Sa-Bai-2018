@@ -55,6 +55,10 @@
             <a class="btn btn-app homepage-button bg-yellow" href="pharmacy.jsp">
                 <i class="fa fa-user-plus fa-5x"></i> <h3>Pharmacy</h3>
             </a>
+            
+            <a class="btn btn-app homepage-button bg-purple" href="pharmahistory.jsp">
+                <i class="fa fa-bar-chart fa-5x"></i> <h3>Order History</h3>
+            </a>
 
             <a class="btn btn-app homepage-button bg-fuchsia" href="summary.jsp">
                 <i class="fa fa-bar-chart fa-5x"></i> <h3>Summary</h3>
@@ -135,6 +139,10 @@
             
             <a class="btn btn-app homepage-button bg-yellow" href="pharmacy.jsp">
                 <i class="fa fa-user-plus fa-5x"></i> <h3>Pharmacy</h3>
+            </a>
+            
+            <a class="btn btn-app homepage-button bg-purple" href="pharmahistory.jsp">
+                <i class="fa fa-bar-chart fa-5x"></i> <h3>Order History</h3>
             </a>
             
             <a class="btn btn-app homepage-button bg-purple" href="new_order.jsp">

@@ -41,7 +41,7 @@ def compareimages():
     second_encoding = np.array(data['second_encoding'])
     try:
         results = face_recognition.compare_faces(
-            [first_encoding], second_encoding, tolerance=0.3)
+            [first_encoding], second_encoding, tolerance=0.4)
     except TypeError:
         results = "false"
     # print(results[0])

@@ -69,7 +69,11 @@ public class ApproveOrderServlet extends HttpServlet {
         
         if (request.getParameter("reject") != null) {
             System.out.println("Pharmacy Rejected OrderID: " + orderID);
-            inventoryDAO.rejectOrders(orderID);
+            if(request.getParameter("prev").equals("approved")){
+                inventoryDAO.rejectPrevApproved(orderList);
+            }else{
+                inventoryDAO.rejectOrders(orderID);
+            }  
             System.out.println("Pharmacy Successfully Removed OrderID: " + orderID);
             request.getSession().setAttribute("successmsg", "Request Rejected");
         }

@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Drug;
 import model.Order;
+import util.DateUtility;
 
 /**
  *
@@ -160,8 +161,9 @@ public class InventoryDAO {
         try {
             conn = ConnectionManager.getConnection();
             
-            stmt = conn.prepareStatement("update orders set status='APPROVED' where order_id = ?");
-            stmt.setInt(1, orderID);
+            stmt = conn.prepareStatement("update orders set status='APPROVED', action_time = ? where order_id = ?");
+            stmt.setString(1, DateUtility.getCurrentDate());
+            stmt.setInt(2, orderID);
             stmt.executeUpdate();
             
             return true;
@@ -239,8 +241,40 @@ public class InventoryDAO {
         
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("update orders set status='REJECTED' where order_id = ?");
-            stmt.setInt(1, orderID);
+            stmt = conn.prepareStatement("update orders set status='REJECTED', action_time = ? where order_id = ?");
+            stmt.setString(1, DateUtility.getCurrentDate());
+            stmt.setInt(2, orderID);
+            stmt.executeUpdate();
+
+            return true;
+            //Returns the converted array to the caller of method
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        return false;
+    }
+    
+    public static boolean rejectPrevApproved(ArrayList<Order> orderList){
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        
+        int orderID = 0;
+        
+        try {
+            for(Order ord : orderList){
+                ord.setQuantity(ord.getQuantity() * (-1));
+                updateInventory(ord);
+                orderID = ord.getOrderID();
+            }
+            
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("update orders set status='REJECTED', action_time = ? where order_id = ?");
+            stmt.setString(1, DateUtility.getCurrentDate());
+            stmt.setInt(2, orderID);
             stmt.executeUpdate();
 
             return true;

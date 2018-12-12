@@ -153,6 +153,58 @@ public class OrderDAO {
         System.out.println("Returning 0");
         return 0;
     }
+    
+    public static ArrayList<Order> getTodaysProcessedOrders() {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        ArrayList<Order> orderList = new ArrayList<Order>();
+        ConsultDAO consultDAO = new ConsultDAO();
+        VisitDAO visitDAO = new VisitDAO();
+
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("SELECT o.order_id, visit_id, medicine_name, quantity, notes, remarks, action_time, status FROM orders o INNER JOIN orderlist ol ON o.order_id = ol.order_id WHERE status <> 'PENDING' AND DATE(action_time) = DATE(NOW())");
+            rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                int problemID = 0;
+                try {
+                    int orderID = rs.getInt("order_id");
+                    problemID = orderID;
+                    int visit_id = rs.getInt("visit_id");
+                    String medicine_name = rs.getString("medicine_name");
+                    int quantity = rs.getInt("quantity");
+                    String notes = rs.getString("notes");
+                    String remarks = rs.getString("remarks");
+                    Consult con = consultDAO.getConsultByVisitID(visit_id);
+                    String date_executed = rs.getString("action_time");
+                    String status = rs.getString("status");
+                    String doctor;
+                    if(con == null || con.getDoctor() == null){
+                        doctor = "";
+                    }else{
+                        doctor = con.getDoctor();
+                    }
+
+                    //System.out.println("Patient ID is " + visitDAO.getVisitByVisitID(visit_id).getPatientId());
+                    orderList.add(new Order(orderID, doctor, visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks, date_executed, status));
+
+                } catch (NullPointerException e) {
+                    System.out.println("problem order ID: "  + problemID);
+                    continue;
+                }
+
+            }
+
+            return orderList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        return orderList;
+    }
 
     public static ArrayList<Order> getOrders() {
         Connection conn = null;
