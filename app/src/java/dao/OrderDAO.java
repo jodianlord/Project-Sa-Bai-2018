@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import model.Consult;
 import model.Order;
+import util.DateUtility;
 
 /**
  *
@@ -65,8 +66,9 @@ public class OrderDAO {
 
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("INSERT INTO orders values(NULL,?,'PENDING')");
+            stmt = conn.prepareStatement("INSERT INTO orders values(NULL,?,'PENDING',?)");
             stmt.setInt(1, visitID);
+            stmt.setString(2, DateUtility.getCurrentDate());
             stmt.executeUpdate();
 
             return true;

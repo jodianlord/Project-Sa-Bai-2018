@@ -75,6 +75,10 @@
             <a class="btn btn-app homepage-button bg-orange" href="inventory.jsp">
                 <i class="fa fa-bar-chart fa-5x"></i> <h3>Inventory</h3>
             </a>
+            
+            <a class="btn btn-app homepage-button bg-orange" href="queue.jsp">
+                <i class="fa fa-user fa-5x"></i> <h3>Queue</h3>
+            </a>
 
             <%
                 }
