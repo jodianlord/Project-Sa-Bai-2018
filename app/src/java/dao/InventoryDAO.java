@@ -19,7 +19,8 @@ import util.DateUtility;
  * @author Kwtam
  */
 public class InventoryDAO {
-    public static ArrayList<Drug> getInventory(){
+
+    public static ArrayList<Drug> getInventory() {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -34,7 +35,7 @@ public class InventoryDAO {
                 String medicine = rs.getString("medicine_name");
                 int quantity = rs.getInt("quantity");
                 int id = rs.getInt("id");
-                
+
                 drugList.add(new Drug(id, medicine, quantity));
             }
             //Returns the converted array to the caller of method
@@ -47,8 +48,8 @@ public class InventoryDAO {
         }
         return null;
     }
-    
-    public static int getDrugQuantity(String name){
+
+    public static int getDrugQuantity(String name) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -71,28 +72,28 @@ public class InventoryDAO {
         }
         return 0;
     }
-    
-    public static boolean changeQuantity(Drug dr){
+
+    public static boolean changeQuantity(Drug dr) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
-        try{
+
+        try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("UPDATE inventory SET quantity = ? WHERE id = ?");
             stmt.setInt(1, dr.getQuantity());
             stmt.setInt(2, dr.getID());
             stmt.executeUpdate();
             return true;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }finally{
+        } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
     }
-    
-    public static boolean reorderInventory(){
+
+    public static boolean reorderInventory() {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -109,14 +110,14 @@ public class InventoryDAO {
                 counter++;
             }
             System.out.println(drugList.size());
-            
+
             pstmt = conn.prepareStatement("DELETE FROM inventory WHERE id <= " + drugList.size());
-            
+
             pstmt.executeUpdate();
             pstmt = conn.prepareStatement("ALTER TABLE inventory AUTO_INCREMENT = 1");
             pstmt.executeUpdate();
-            
-            for(Drug drug : drugList){
+
+            for (Drug drug : drugList) {
                 System.out.println(drug.getMedicine_name());
                 pstmt = conn.prepareStatement("INSERT INTO inventory(medicine_name, quantity) VALUES(?, ?)");
                 pstmt.setString(1, drug.getMedicine_name());
@@ -127,17 +128,17 @@ public class InventoryDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }finally{
+        } finally {
             ConnectionManager.close(conn, pstmt, rs);
         }
     }
-    
-    public static boolean addDrug(Drug dr){
+
+    public static boolean addDrug(Drug dr) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
-        try{
+
+        try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("INSERT INTO inventory VALUES (?, ?, ?)");
             stmt.setInt(1, dr.getID());
@@ -145,27 +146,27 @@ public class InventoryDAO {
             stmt.setInt(3, dr.getQuantity());
             stmt.executeUpdate();
             return true;
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }finally{
+        } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
     }
-    
-    public static boolean updateInventoryStatus(int orderID){
+
+    public static boolean updateInventoryStatus(int orderID) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
 
         try {
             conn = ConnectionManager.getConnection();
-            
+
             stmt = conn.prepareStatement("update orders set status='APPROVED', action_time = ? where order_id = ?");
             stmt.setString(1, DateUtility.getCurrentDate());
             stmt.setInt(2, orderID);
             stmt.executeUpdate();
-            
+
             return true;
             //Returns the converted array to the caller of method
 
@@ -176,8 +177,8 @@ public class InventoryDAO {
         }
         return false;
     }
-    
-    public static void updateInventory(Order order){
+
+    public static void updateInventory(Order order) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
@@ -188,24 +189,23 @@ public class InventoryDAO {
             stmt.setDouble(1, order.getQuantity());
             stmt.setString(2, order.getMedicine());
             stmt.executeUpdate();
-            
-            //Returns the converted array to the caller of method
 
+            //Returns the converted array to the caller of method
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             ConnectionManager.close(conn, stmt, rs);
         }
     }
-    
-    public static ArrayList<Order> getOrdersByVisitID(int visit_id){
+
+    public static ArrayList<Order> getOrdersByVisitID(int visit_id) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
         ArrayList<Order> orderList = new ArrayList<Order>();
         ConsultDAO consultDAO = new ConsultDAO();
         VisitDAO visitDAO = new VisitDAO();
-        
+
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("SELECT o.order_id, visit_id, medicine_name, quantity, notes, remarks FROM orders o INNER JOIN orderlist ol ON o.order_id = ol.order_id WHERE visit_id = ?");
@@ -219,8 +219,8 @@ public class InventoryDAO {
                 int quantity = rs.getInt("quantity");
                 String notes = rs.getString("notes");
                 String remarks = rs.getString("remarks");
-                
-                orderList.add(new Order(orderID,consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
+
+                orderList.add(new Order(orderID, consultDAO.getConsultByVisitID(visit_id).getDoctor(), visitDAO.getVisitByVisitID(visit_id).getPatientId(), medicine_name, quantity, notes, remarks));
             }
 
             return orderList;
@@ -233,12 +233,47 @@ public class InventoryDAO {
         }
         return orderList;
     }
-    
-    public static boolean rejectOrders(int orderID){
+
+    public static boolean revertOrder(ArrayList<Order> orderList, String status) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
+        int orderID = 0;
+
+        try {
+            if (status.equals("APPROVED")) {
+                for (Order ord : orderList) {
+                    ord.setQuantity(ord.getQuantity() * (-1));
+                    updateInventory(ord);
+                    orderID = ord.getOrderID();
+                }
+            }
+            if(orderList != null && !orderList.isEmpty()){
+                orderID = orderList.get(0).getOrderID();
+            }
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement("update orders set status='PENDING', action_time = ? where order_id = ?");
+            stmt.setString(1, DateUtility.getCurrentDate());
+            stmt.setInt(2, orderID);
+            stmt.executeUpdate();
+
+            return true;
+            //Returns the converted array to the caller of method
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.close(conn, stmt, rs);
+        }
+        return false;
+    }
+
+    public static boolean rejectOrders(int orderID) {
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("update orders set status='REJECTED', action_time = ? where order_id = ?");
@@ -256,21 +291,21 @@ public class InventoryDAO {
         }
         return false;
     }
-    
-    public static boolean rejectPrevApproved(ArrayList<Order> orderList){
+
+    public static boolean rejectPrevApproved(ArrayList<Order> orderList) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         int orderID = 0;
-        
+
         try {
-            for(Order ord : orderList){
+            for (Order ord : orderList) {
                 ord.setQuantity(ord.getQuantity() * (-1));
                 updateInventory(ord);
                 orderID = ord.getOrderID();
             }
-            
+
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("update orders set status='REJECTED', action_time = ? where order_id = ?");
             stmt.setString(1, DateUtility.getCurrentDate());
@@ -287,12 +322,12 @@ public class InventoryDAO {
         }
         return false;
     }
-    
-    public static boolean hideOrders(int orderID){
+
+    public static boolean hideOrders(int orderID) {
         Connection conn = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        
+
         try {
             conn = ConnectionManager.getConnection();
             stmt = conn.prepareStatement("update orders set status='HIDDEN' where order_id = ?");

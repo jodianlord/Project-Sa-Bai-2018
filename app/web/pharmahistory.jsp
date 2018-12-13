@@ -199,6 +199,7 @@
                                                     <button class="btn btn-danger cancel" type="button" name="cancel">Cancel</button>
                                                     <button class="btn btn-danger reject" type="button" name="reject" onClick="onRejectPrevApproved(<%=firstOrder.getOrderID()%>)">Reject</button>
                                                     <button class="btn btn-info mask" type="button" name="hide" onClick="onHide(<%=firstOrder.getOrderID()%>)">Hide</button>
+                                                    <button class="btn btn-primary" type="button" name="revert" onClick="onRevert(<%=firstOrder.getOrderID()%>, '<%=firstOrder.getStatus()%>')">Revert</button>
                                                 </td>
                                                 
                                 <%
