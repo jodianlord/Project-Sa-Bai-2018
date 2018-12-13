@@ -15,7 +15,7 @@
 
 <div class="box box-info box-solid" style="width:50%; margin:0 auto; background-color:white" >
     <div class="box-header with-border">
-        <h3 class="box-title">View/Edit Inventory</h3>
+        <h3 class="box-title">Queue</h3>
         <!-- /.box-tools -->
     </div>
 
@@ -29,6 +29,7 @@
                     <th>#</th>
                     <th>Patient ID</th>
                     <th>Patient Name</th>
+                    <th>Timestamp</th>
                     <th>Status</th>
                     <th>Call</th>
                 </tr>

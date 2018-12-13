@@ -6,23 +6,22 @@
 package servlet;
 
 import dao.QueueDAO;
-import dao.VisitDAO;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
-import javax.servlet.RequestDispatcher;
+import java.util.ArrayList;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import model.Visit;
-import util.DateUtility;
+import model.Queue;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
- * @author tcw
+ * @author Jordy
  */
-public class CreateVisitServlet extends HttpServlet {
+public class QueueServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -35,32 +34,21 @@ public class CreateVisitServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-        /* TODO output your page here. You may use following sample code. */
-        VisitDAO visitDAO = new VisitDAO();
-        String patientID = request.getParameter("patientId");
-        if (patientID != null) {
-            try {
-                int patientId = Integer.parseInt(patientID);
-                int visitId = visitDAO.countTotalVisits() + 1;
-                Date date = new Date();
-                String visitDate = date.toString();
-                
-                Visit visit = new Visit(visitId, patientId, visitDate);
-                
-                boolean successful = visitDAO.insertData(visitId, patientId, visitDate);
-                
-                if (successful) {
-                    QueueDAO.updateQueue(patientId, visitId, "REGISTERED");
-                    request.getSession().setAttribute("patientID", patientID);
-                    request.getSession().setAttribute("successMsg", "A new visit is created");
-                    
-                    response.sendRedirect("existing_patient.jsp");
-                }
-            } catch (NumberFormatException ne) {
-
+        response.setContentType("application/json");
+        try (PrintWriter out = response.getWriter()) {
+            JSONArray jArr = new JSONArray();
+            ArrayList<Queue> queueList = QueueDAO.getQueue();
+            for(Queue q : queueList){
+                JSONObject queue = new JSONObject();
+                queue.put("patientID", q.getPatientID());
+                queue.put("visitID", q.getVisitID());
+                queue.put("timestamp", q.getTimestamp());
+                queue.put("status", q.getStatus());
+                queue.put("name", q.getName());
+                jArr.add(queue);
             }
-
+            out.println(jArr.toString());
+            response.setStatus(HttpServletResponse.SC_OK);
         }
     }
 
@@ -90,7 +78,7 @@ public class CreateVisitServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        int visitID = Integer.parseInt(request.getParameter("visitID"));
     }
 
     /**

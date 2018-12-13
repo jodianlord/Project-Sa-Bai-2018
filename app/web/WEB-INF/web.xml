@@ -111,6 +111,10 @@
         <servlet-name>InsertAddendumServlet</servlet-name>
         <servlet-class>servlet.InsertAddendumServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>QueueServlet</servlet-name>
+        <servlet-class>servlet.QueueServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>InitializeBioMiniServlet</servlet-name>
         <url-pattern>/InitializeBioMiniServlet</url-pattern>
@@ -218,6 +222,10 @@
     <servlet-mapping>
         <servlet-name>InsertAddendumServlet</servlet-name>
         <url-pattern>/InsertAddendumServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>QueueServlet</servlet-name>
+        <url-pattern>/QueueServlet</url-pattern>
     </servlet-mapping>
     <session-config>
         <session-timeout>

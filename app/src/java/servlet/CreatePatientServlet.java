@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import dao.FingerprintDAO;
 import dao.PatientDAO;
+import dao.QueueDAO;
 import dao.VisitDAO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -203,7 +204,9 @@ public class CreatePatientServlet extends HttpServlet {
             if (successful) {
                 System.out.println("successful registered patient and created a new visit");
             }
-
+            
+            QueueDAO.updateQueue(p.getPatientId(), visitId, "REGISTERED");
+            
             JsonObject jo = new JsonObject();
             jo.addProperty("status", "success");
             jo.addProperty("newID", p.getVillage() + p.getPatientId());

@@ -5,6 +5,7 @@
  */
 package servlet;
 
+import dao.QueueDAO;
 import dao.VitalsDAO;
 import dao.VisitDAO;
 import java.io.IOException;
@@ -168,6 +169,7 @@ public class CreateVitalsServlet extends HttpServlet {
             }
 
             if (successful) {
+                QueueDAO.updateQueue(0, visitId, "VITALS DONE");
                 if (update == 0) {
                     session.setAttribute("msg", "A new vitals is created");
                 } else if (update == 1) {
