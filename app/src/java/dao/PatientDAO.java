@@ -231,7 +231,7 @@ public class PatientDAO {
         ArrayList<Patient> patientList = new ArrayList<Patient>();
         try {
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("select * from patients where face_encodings is not null");
+            stmt = conn.prepareStatement("select * from patients where face_encodings is not null and village_prefix = 'PCV'");
             rs = stmt.executeQuery();
 
             while (rs.next()) {

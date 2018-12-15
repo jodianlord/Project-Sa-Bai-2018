@@ -59,7 +59,7 @@ public class QueueDAO {
         ArrayList<Queue> queueList = new ArrayList<>();
         try{
             conn = ConnectionManager.getConnection();
-            stmt = conn.prepareStatement("SELECT patient_id, visit_id, timestamp, status, name FROM queue_status inner join patients ON queue_status.patient_id = patients.id");
+            stmt = conn.prepareStatement("SELECT patient_id, visit_id, timestamp, status, name FROM queue_status inner join patients ON queue_status.patient_id = patients.id WHERE visit_id not in (SELECT visit_id FROM consults)");
             rs = stmt.executeQuery();
             while(rs.next()){
                 int patientID = rs.getInt("patient_id");

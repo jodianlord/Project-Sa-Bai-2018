@@ -127,9 +127,9 @@
                             <label for="village">Village</label>
                             <!--<input type="text" class="form-control" id="village" name="village" placeholder="Enter village">-->
                             <select name="village" id="village" class="form-control">
-                                <option value="PCV">PCV</option>
+                                <option value="PCV" selected>PCV</option>
                                 <option value="KSV">KSV</option>
-                                <option value="PGV" selected>PGV</option>
+                                <option value="PGV">PGV</option>
                                 <option value="TTV">TTV</option>
                             </select>
                         </div>

@@ -4,11 +4,13 @@
  * and open the template in the editor.
  */
 $(document).ready(function(){
-    $.ajax({
+    setInterval(function(){
+        $.ajax({
         type: "GET",
         url: "./QueueServlet",
         success: function(resp){
             console.log(resp);
+            $("#medBody").empty();
             for(var i = 0; i < resp.length; i++){
                 obj = resp[i];
                 $("#medBody").append("<tr><td>" + (i + 1) + "</td><td>" + obj.patientID + "</td><td>" +
@@ -19,6 +21,8 @@ $(document).ready(function(){
             console.log("fail");
         }
     });
+    }, 5000);
+    
 })
 
 function callPatient(visitID){

@@ -46,7 +46,7 @@ public class DBTools {
         //changeToJPEG(directoryListing, "C:\\Users\\jodia\\Documents\\patient-images-backup\\patient-images-241217-1641hrs\\");
         //uploadDB(directoryListing);
         //unfuckInventory();
-        deleteMedicine("Orphenadrine citrate 35mg &amp; Paracetamol 450mg");
+        deleteMedicine("Ibuprofen 400mg tab");
     }
 
     public static void changeToJPEG(File[] fileArr, String directory) {
