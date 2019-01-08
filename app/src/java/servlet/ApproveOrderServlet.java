@@ -58,17 +58,17 @@ public class ApproveOrderServlet extends HttpServlet {
                     inventoryDAO.updateInventory(order);
                 }
                 
-                System.out.println("Sufficient Quantity For All Orders");
+                //System.out.println("Sufficient Quantity For All Orders");
                 inventoryDAO.updateInventoryStatus(orderList.get(0).getOrderID());
                 request.getSession().setAttribute("successmsg", "Request Approved");
             } else {
-                System.out.println("Insufficient Quantity For Some/All Orders");
+                //System.out.println("Insufficient Quantity For Some/All Orders");
                 request.getSession().setAttribute("errormsg", "Insufficient Quantity");
             }
         }
         
         if (request.getParameter("reject") != null) {
-            System.out.println("Pharmacy Rejected OrderID: " + orderID);
+            //System.out.println("Pharmacy Rejected OrderID: " + orderID);
             if(request.getParameter("prev")!= null && request.getParameter("prev").equals("approved")){
                 inventoryDAO.rejectPrevApproved(orderList);
                 request.getSession().setAttribute("successmsg", "Request Rejected");
@@ -79,14 +79,14 @@ public class ApproveOrderServlet extends HttpServlet {
                 inventoryDAO.rejectOrders(orderID);
                 request.getSession().setAttribute("successmsg", "Request Rejected");
             }  
-            System.out.println("Pharmacy Successfully Removed OrderID: " + orderID);
+            //System.out.println("Pharmacy Successfully Removed OrderID: " + orderID);
             
         }
         
         if(request.getParameter("hide") != null){
-            System.out.println("Pharmacy Hides OrderID: " + orderID);
+            //System.out.println("Pharmacy Hides OrderID: " + orderID);
             inventoryDAO.hideOrders(orderID);
-            System.out.println("Pharmacy Successfully Hidden OrderID: " + orderID);
+            //System.out.println("Pharmacy Successfully Hidden OrderID: " + orderID);
             request.getSession().setAttribute("successmsg", "Order Hidden");
         }
         
